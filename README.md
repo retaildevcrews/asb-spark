@@ -10,24 +10,24 @@
 
 > Please capture any bugs, issues or ideas on the `GitHub Board`
 
+## Before Deploying ASB
+
+- go to [idweb](https://idweb/) to setup a security group (requires VPN)
+- create a security group
+  - mail-enabled is optional
+  - do not use spaces in the name
+- add yourself and your team to the security group
+- AAD propogation can take up to 30 minutes
+
 ## Deploying ASB
-
-### Getting Started
-
-### Login to Azure Portal
-
-- Login using the credentials provided at <https://portal.azure.com>
-  - You will need to change your password
 
 ### Create Codespace
 
-- The `AKS Secure Baseline` repo for the hack is at [github/retaildevcrews/ocw-asb](https://github.com/retaildevcrews/ocw-asb)
+- The `AKS Secure Baseline` repo for the hack is at [github/retaildevcrews/asb-spark](https://github.com/retaildevcrews/asb-spark)
 - Open this repo in your web browser
 - Create a new `Codespace` in this repo
   - If the `fork option` appears, you need to request permission to the repo
   - Do not choose fork
-- If you are not using Codespaces, ask your coach for this value
-  - `export ASB_TENANT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 
 ```bash
 
@@ -41,11 +41,18 @@ az account show
 # install kubectl and kubelogin
 sudo az aks install-cli
 
+# set your security group name (created above); replace [YourSecurityGroupName] before running
+export ASB_CLUSTER_ADMIN_GROUP=[YourSecurityGroupName]
+
+# verify your security group membership
+az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o table
+
 ```
 
 ### Set Team Name
 
 > Team Name is very particular and won't fail for about an hour ...
+> we recommend youralias1 (not first.last)
 
 ```bash
 
@@ -101,19 +108,6 @@ git status
 git add .
 git commit -m "added cluster config"
 git push
-
-```
-
-### Add Team to Cluster Admin Group
-
-```bash
-
-### repeat for each of the other members of your team
-az ad group member add -g $ASB_CLUSTER_ADMIN_GROUP --member-id $(az ad user show --query objectId -o tsv --id \
-changeThisForEachTeamMember@${ASB_TENANT_TLD})
-
-# list users
-az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o table
 
 ```
 
@@ -227,9 +221,42 @@ kubectl get pods -A
 
 > Do not just delete the resource groups
 
+Make sure ASB_TEAM_NAME is set correctly
+
 ```bash
 
-./cleanup.sh $ASB_TEAM_NAME
+echo $ASB_TEAM_NAME
+
+```
+
+Delete the cluster
+
+```bash
+
+# resource group names
+export ASB_RG_CORE=rg-${ASB_TEAM_NAME}-core
+export ASB_RG_HUB=rg-${ASB_TEAM_NAME}-networking-hub
+export ASB_RG_SPOKE=rg-${ASB_TEAM_NAME}-networking-spoke
+
+export ASB_AKS_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.aksClusterName.value -o tsv)
+export ASB_KEYVAULT_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.keyVaultName.value -o tsv)
+export ASB_LA_HUB=$(az monitor log-analytics workspace list -g $ASB_RG_HUB --query [0].name -o tsv)
+
+# delete and purge the key vault
+az keyvault delete -n $ASB_KEYVAULT_NAME
+az keyvault purge -n $ASB_KEYVAULT_NAME
+
+# hard delete Log Analytics
+az monitor log-analytics workspace delete -y --force true -g $ASB_RG_CORE -n la-${ASB_AKS_NAME}
+az monitor log-analytics workspace delete -y --force true -g $ASB_RG_HUB -n $ASB_LA_HUB
+
+# delete the resource groups
+az group delete -y --no-wait -g $ASB_RG_CORE
+az group delete -y --no-wait -g $ASB_RG_HUB
+az group delete -y --no-wait -g $ASB_RG_SPOKE
+
+# delete from .kube/config
+kubectl config delete-context $ASB_TEAM_NAME
 
 ### delete your git branch if desired
 
@@ -243,30 +270,18 @@ az group delete -y --no-wait -g $ASB_RG_SPOKE
 
 ## Challenges
 
+### Challenge 1
+
+- TODO - add https redirect here
+
 Here are some ideas for `next steps`
 
-> Please document and PR the steps (even if incomplete) into the /challenges folder
-
-- Integrate `APIM` into the architecture
-- Install all the pre-reqs locally and create a cluster from your laptop
-  - make sure to use a unique `ASB_TEAM_NAME`
-- Use the existing `Key Vault` to load the certs
-  - Copy and modify the template to not create a new Key Vault
 - Create a dashboard visualizing blocked traffic
+- Add ghcr.io as a container registry
+- Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
 - Explore `Azure Log Analytics` for observability
-- Deploy `Prometheus` and `Grafana` for CNCF observability
-- Deploy `Fluent Bit` to `Log Analytics` for `Application Logging`
-  - Instructions [here](https://aka.ms/fbla)
-- Run `Load Tests` and test `auto-scaling`
-- Do a `blue / green` deployment of `NGSA-Memory`
-- Deploy two `ASB Clusters` in the same `Network Hub`
-- Deploy two `ASB Clusters` in `different regions`
-- Deploy `Cosmos DB` in the network and add `NGSA-Cosmos` to the cluster
 - Explore an idea from your experiences / upcoming customer projects
-- Experiment with `AutoGitOps`
-- Fix a `bug` that you ran into during the `hack`
-- Fix a `bug` from the board
-- Improve the `Developer Experience` (several ideas on the board or come up with your own!)
+- Fix a bug that you ran into during the hack
 - Most importantly, `have fun and learn at the hack!`
 
 ### Random Notes

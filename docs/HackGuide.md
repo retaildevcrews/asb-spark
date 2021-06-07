@@ -4,7 +4,7 @@
 
 ### Attendee Prerequisites
 
-- Working knowledge of Docker, k8s and AKS
+- Working knowledge of Docker, Kubernetes and AKS
 - GitHub ID with 2FA enabled
 
 ### Process
@@ -34,23 +34,9 @@
 
 ### Azure Subscription
 
-- You need an Azure Subscription with AAD permissions
-- This will work in an AIRS subscription
-  - See `readme-airs` as the instructions are slightly different
-- Domain / cert
-  - Register a TLD in the subscription
-  - Add a wildcard cert stored in Key Vault
-  - Setup DNS - By default, DNS is locked so the A records can't be deleted
-  - We use the `TLD` resource group
-- Consider creating an AAD tenant just for the hack
-  - After the hack, use your real tenant
-  - We haven't fully tested this yet but it seems like a best practice
-- Create an AAD hack group
-  - Grant AAD User Admin permissions
-  - Grant Azure Subscription Contributor permissions
-- Create Users
-  - Add to AAD hack group
-  - Email login info and validate Azure access before hack starts
+- Each attendee should have an Azure AIRS Subscription
+- Create Azure Security Group via [idweb](https://idweb/)
+- Add hack attendees to security group
 - Check Azure Quotas and increase if needed
   - Public IPs default to 100 and each cluster needs 4 PIPs
   - Each cluster deploys 5 VMs
@@ -60,34 +46,27 @@
 
 ### Repo Setup
 
-- Clone (not fork) this repo
 - Set the `ASB_TENANT_ID` repo secret to your Azure Subscription Tenant ID
 - Set branch protection rule on `main`
 - **Do NOT merge a PR with the cluster generated files into `main`**
-- Make sure your org has GitHub Codespaces access
 - Add users to GitHub org
 - Grant write priveleges to repo
 - Validate Codespaces access before hack
   - Some people may start early
   - Keep content simple until hack starts
-- Setup is currently done via `setup.sh`
-  - We do this to make maintenance easier
-  - You can copy the commands into readme.md `fences` if you want to do step-by-step
-    - Open the GitHub repo in a browser and you'll get a copy button for each fence
-    - Codespaces does not have the copy button and hackers make a lot of copy-paste mistakes
 
 ### Communication Setup
 
 - Setup Teams or use GitHub Discussions
   - Most hacks will have multiple breakout teams
   - Add coaches to breakout teams
-  - We used `Teams Chats` (not channels) and it worked well
+  - We used `Teams Meetings` (not channels or chats) and it worked well
   - Encourage everyone to use the `Join` button and work `in the open`
   - Allows coaches to `drop in`
 
 ## Execution
 
-> Duration: 3-4 days is a good estimate to go deeper via `Challenges`
+> Duration: 2-3 days is a good estimate to go deeper via `Challenges`
 
 ### Day 1 Agenda
 
@@ -104,6 +83,13 @@
     - red1, blue1, green1 ...
   - One person should drive the entire initial setup
   - Do not try to switch off in the middle the first time
+- Each team works through the first challenge
+  - Add https auto-redirect to App Gateway
+  - Two part challenge
+    - Add to existing cluster
+    - Update ARM Template
+    - Delete existing cluster
+    - Deploy new cluster
 - Stand Up and Challenge Planning
   - Stand up - especially blockers
   - Encourage attendees to clean-up unused clusters
@@ -111,6 +97,7 @@
     - We let attendees self-select
     - 2-5 seems ideal
     - Coaches support, so not too many teams
+    - Challenge order is not important after Challenge 1
 
 ### Day 2+ Agenda
 
@@ -165,11 +152,10 @@
 - One person should drive the entire initial setup
 - Do not try to switch off in the middle the first time
 - Once setup, everything the other team members need is in the team branch
-- Make sure to add each team member to the cluster admin group
 
 ### Adding SSL Certs
 
-> You will need to request access to the `Key Vault`
+> These are already set in the `asb-spark` repo
 
 Create three `repo level Codespaces secrets` in your repo and set the values to the results of the commands below
 
