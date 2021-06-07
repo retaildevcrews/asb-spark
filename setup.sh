@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### TODO - remove this after adding to readme fences
+
 set -e
 
 # teamName is required
