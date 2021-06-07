@@ -22,20 +22,13 @@ then
   fi
 fi
 
-# set default shared cert values
-if [ -z "$ASB_SHARED_KV_NAME" ]
-then
-  export ASB_SHARED_KV_NAME=kv-tld
-fi
-
 ASB_TEAM_NAME=$1
 
 # resource group names
 export ASB_RG_CORE=rg-${ASB_TEAM_NAME}-core
-export ASB_RG_HUB=rg-${ASB_TEAM_NAME}-networking-hubs
-export ASB_RG_SPOKE=rg-${ASB_TEAM_NAME}-networking-spokes
+export ASB_RG_HUB=rg-${ASB_TEAM_NAME}-networking-hub
+export ASB_RG_SPOKE=rg-${ASB_TEAM_NAME}-networking-spoke
 
-export ASB_CLUSTER_ADMIN_GROUP=cluster-admins-$ASB_TEAM_NAME
 export ASB_AKS_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.aksClusterName.value -o tsv)
 export ASB_KEYVAULT_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.keyVaultName.value -o tsv)
 export ASB_LA_HUB=$(az monitor log-analytics workspace list -g $ASB_RG_HUB --query [0].name -o tsv)
@@ -50,12 +43,6 @@ fi
 # hard delete Log Analytics
 az monitor log-analytics workspace delete -y --force true -g $ASB_RG_CORE -n la-${ASB_AKS_NAME}
 az monitor log-analytics workspace delete -y --force true -g $ASB_RG_HUB -n $ASB_LA_HUB
-
-# delete AAD group
-az ad group delete -g $ASB_CLUSTER_ADMIN_GROUP
-
-# delete DNS record
-az network dns record-set a delete -g tld -z aks-sb.com -y -n $ASB_TEAM_NAME
 
 # delete the resource groups
 az group delete -y --no-wait -g $ASB_RG_CORE

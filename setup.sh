@@ -5,14 +5,14 @@ set -e
 # teamName is required
 if [ -z "$1" ]
 then
-  echo Usage: ./setup.sh teamName
+  echo Usage: ./airs-setup.sh teamName
   exit 1
 fi
 
 # help
 if [ "-h" == "$1" ] || [ "--help" == "$1" ]
 then
-  echo Usage: ./setup.sh teamName
+  echo Usage: ./airs-setup.sh teamName
   exit 0
 fi
 
@@ -48,13 +48,6 @@ cd $(dirname $0)
 # save param as ASB_TEAM_NAME
 export ASB_TEAM_NAME=$1
 
-# set default domain name
-if [ -z "$ASB_DNS_ZONE" ]
-then
-  export ASB_DNS_ZONE=aks-sb.com
-fi
-export ASB_DOMAIN=${ASB_TEAM_NAME}.${ASB_DNS_ZONE}
-
 # set default location
 if [ -z "$ASB_LOCATION" ]
 then
@@ -78,31 +71,29 @@ fi
 # AAD admin group name
 if [ -z "$ASB_CLUSTER_ADMIN_GROUP" ]
 then
-  export ASB_CLUSTER_ADMIN_GROUP=cluster-admins-$ASB_TEAM_NAME
+  echo ASB_CLUSTER_ADMIN_GROUP must be set to an existing group name
+  exit 1
 fi
 
-# github info for flux
+# get AAD cluster admin group
+export ASB_CLUSTER_ADMIN_ID=$(az ad group show -g $ASB_CLUSTER_ADMIN_GROUP --query objectId -o tsv)
+
+if [ -z "$ASB_CLUSTER_ADMIN_ID" ]
+then
+  echo "Unable to find Cluster Admin Group $ASB_CLUSTER_ADMIN_GROUP"
+  exit 1
+fi
+
+export ASB_GIT_REPO=$(git remote -v | cut -f 2 | cut -f 1 -d " " | head -n 1)
+
 if [ -z "$ASB_GIT_REPO" ]
 then
-  export ASB_GIT_REPO=$(git remote -v | cut -f 2 | cut -f 1 -d " " | head -n 1)
-
-  if [ -z "$ASB_GIT_REPO" ]
-  then
-    echo Please cd to an ASB git repo
-    exit 1
-  fi
+  echo Please cd to an ASB git repo
+  exit 1
 fi
 
-if [ -z "$ASB_GIT_PATH" ]
-then
-  export ASB_GIT_PATH=gitops
-fi
-
-if [ -z "$ASB_GIT_BRANCH" ]
-then
-  export ASB_GIT_BRANCH=$(git status  --porcelain --branch | head -n 1 | cut -f 2 -d " " | cut -f 1 -d .)
-fi
-
+export ASB_GIT_PATH=gitops
+export ASB_GIT_BRANCH=$(git status  --porcelain --branch | head -n 1 | cut -f 2 -d " " | cut -f 1 -d .)
 
 # don't allow main branch
 if [ -z "$ASB_GIT_BRANCH" ] || [ "main" == "$ASB_GIT_BRANCH" ]
@@ -112,47 +103,25 @@ then
   exit 1
 fi
 
+# set default domain name
+export ASB_DNS_ZONE=aks-sb.com
+export ASB_DOMAIN=${ASB_TEAM_NAME}.${ASB_DNS_ZONE}
+
 # resource group names
-if [ -z "$ASB_RG_CORE" ]
-then
-  export ASB_RG_CORE=rg-${ASB_TEAM_NAME}-core
-fi
-
-if [ -z "$ASB_RG_HUB" ]
-then
-  export ASB_RG_HUB=rg-${ASB_TEAM_NAME}-networking-hubs
-fi
-
-if [ -z "$ASB_RG_SPOKE" ]
-then
-  export ASB_RG_SPOKE=rg-${ASB_TEAM_NAME}-networking-spokes
-fi
+export ASB_RG_CORE=rg-${ASB_TEAM_NAME}-core
+export ASB_RG_HUB=rg-${ASB_TEAM_NAME}-networking-hub
+export ASB_RG_SPOKE=rg-${ASB_TEAM_NAME}-networking-spoke
 
 # export AAD env vars
 export ASB_TENANT_ID=$(az account show --query tenantId -o tsv)
 
-# continue on error
-set +e
-
-# create AAD cluster admin group
-export ASB_CLUSTER_ADMIN_ID=$(az ad group create --display-name $ASB_CLUSTER_ADMIN_GROUP --mail-nickname $ASB_CLUSTER_ADMIN_GROUP --description "Principals in this group are cluster admins on the cluster." --query objectId -o tsv)
-
-# add current user to cluster admin group
-# you can ignore the exists error
-az ad group member add -g $ASB_CLUSTER_ADMIN_ID --member-id $(az ad signed-in-user show --query objectId -o tsv)
-
-set -e
-
-# get *.onmicrosoft.com domain
-export ASB_TENANT_TLD=$(az ad signed-in-user show --query 'userPrincipalName' -o tsv | cut -d '@' -f 2 | sed 's/\"//')
+# save env vars
+./saveenv.sh -y
 
 # create the resource groups
 az group create -n $ASB_RG_HUB -l $ASB_LOCATION
 az group create -n $ASB_RG_SPOKE -l $ASB_LOCATION
 az group create -n $ASB_RG_CORE -l $ASB_LOCATION
-
-# save env vars
-./saveenv.sh -y
 
 # deploy the network
 az deployment group create -g $ASB_RG_HUB -f networking/hub-default.json -p location=${ASB_LOCATION}
@@ -168,17 +137,17 @@ export ASB_SPOKE_VNET_ID=$(az deployment group show -g $ASB_RG_SPOKE -n spoke-BU
 az deployment group create -g $ASB_RG_CORE \
   -f cluster-stamp.json \
   -n cluster-${ASB_TEAM_NAME} \
-  -p  location=${ASB_LOCATION} \
-      geoRedundancyLocation=${ASB_GEO_LOCATION} \
-      asbTeamName=${ASB_TEAM_NAME} \
-      asbDomain=${ASB_DOMAIN} \
-      asbDnsZone=${ASB_DNS_ZONE} \
-      targetVnetResourceId=${ASB_SPOKE_VNET_ID} \
-      clusterAdminAadGroupObjectId=${ASB_CLUSTER_ADMIN_ID} \
-      k8sControlPlaneAuthorizationTenantId=${ASB_TENANT_ID} \
-      appGatewayListenerCertificate=${APP_GW_CERT} \
-      aksIngressControllerCertificate="$(echo $INGRESS_CERT | base64 -d)" \
-      aksIngressControllerKey="$(echo $INGRESS_KEY | base64 -d)"
+  -p location=${ASB_LOCATION} \
+     geoRedundancyLocation=${ASB_GEO_LOCATION} \
+     asbTeamName=${ASB_TEAM_NAME} \
+     asbDomain=${ASB_DOMAIN} \
+     asbDnsZone=${ASB_DNS_ZONE} \
+     targetVnetResourceId=${ASB_SPOKE_VNET_ID} \
+     clusterAdminAadGroupObjectId=${ASB_CLUSTER_ADMIN_ID} \
+     k8sControlPlaneAuthorizationTenantId=${ASB_TENANT_ID} \
+     appGatewayListenerCertificate=${APP_GW_CERT} \
+     aksIngressControllerCertificate="$(echo $INGRESS_CERT | base64 -d)" \
+     aksIngressControllerKey="$(echo $INGRESS_KEY | base64 -d)"
 
 # get the name of the deployment key vault
 export ASB_KV_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.keyVaultName.value -o tsv)
@@ -189,24 +158,22 @@ export ASB_AKS_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_
 # Get the public IP of our App gateway
 export ASB_AKS_PIP=$(az network public-ip show -g $ASB_RG_SPOKE --name pip-BU0001A0008-00 --query ipAddress -o tsv)
 
-# Add "A" record for the app gateway IP to the public DNS Zone
-az network dns record-set a add-record -a $ASB_AKS_PIP -n $ASB_TEAM_NAME -g TLD -z aks-sb.com
-
 # Get the AKS Ingress Controller Managed Identity details.
 export ASB_TRAEFIK_RESOURCE_ID=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.aksIngressControllerPodManagedIdentityResourceId.value -o tsv)
 export ASB_TRAEFIK_CLIENT_ID=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.aksIngressControllerPodManagedIdentityClientId.value -o tsv)
-
-# save env vars
-./saveenv.sh -y
+export ASB_POD_MI_ID=$(az identity show -n podmi-ingress-controller -g $ASB_RG_CORE --query principalId -o tsv)
 
 # config traefik
 export ASB_INGRESS_CERT_NAME=appgw-ingress-internal-aks-ingress-tls
 export ASB_INGRESS_KEY_NAME=appgw-ingress-internal-aks-ingress-key
 
+# save env vars
+./saveenv.sh -y
+
 rm -f gitops/ingress/02-traefik-config.yaml
-cat templates/traefik-config.yaml | envsubst  > gitops/ingress/02-traefik-config.yaml
+cat templates/traefik-config.yaml | envsubst > gitops/ingress/02-traefik-config.yaml
 rm -f gitops/ngsa/ngsa-ingress.yaml
-cat templates/ngsa-ingress.yaml | envsubst  > gitops/ngsa/ngsa-ingress.yaml
+cat templates/ngsa-ingress.yaml | envsubst > gitops/ngsa/ngsa-ingress.yaml
 
 # update flux.yaml
 rm -f flux.yaml
@@ -217,3 +184,5 @@ az aks get-credentials -g $ASB_RG_CORE -n $ASB_AKS_NAME
 
 # rename context for simplicity
 kubectl config rename-context $ASB_AKS_NAME $ASB_TEAM_NAME
+
+echo "add DNS A record - $ASB_TEAM_NAME  $ASB_AKS_PIP"
