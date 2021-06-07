@@ -36,6 +36,12 @@ then
   exit 1
 fi
 
+if [ -z "$INGRESS_KEY" ]
+then
+  echo Ingress SSL private key is missing
+  exit 1
+fi
+
 # change to this directory
 cd $(dirname $0)
 
