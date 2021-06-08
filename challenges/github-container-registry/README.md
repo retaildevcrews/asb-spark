@@ -4,10 +4,14 @@
 
 Enable the cluster to pull container images from `ghcr.io`
 
-## Steps
+- Deloy `ngsa-ghcr.yaml` from this directory
+  - The pod will fail to start due to `ErrImgPull`
+- Delete the deployment
+
+## Remediation
 
 - Update the Azure image source policy
-- Update the image application firewall rule
+- Update the application firewall rule
 
 ## Hints
 
