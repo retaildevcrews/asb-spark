@@ -761,10 +761,7 @@
                                         "targetFqdns": [
                                             "*.docker.com",
                                             "*.docker.io",
-                                            "docker.io",
-                                            "ghcr.io",
-                                            "*.ghcr.io",
-                                            "*.githubusercontent.com"
+                                            "docker.io"
                                         ],
                                         "targetUrls": [],
                                         "terminateTLS": false,
