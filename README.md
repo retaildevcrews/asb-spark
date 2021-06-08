@@ -175,8 +175,8 @@ kubectl get pods -n ingress
 ### this can take 1-2 minutes
 ### if you get a 502 error retry until you get 200
 
-# test http redirect for a 302
-curl -i http://${ASB_DOMAIN}/memory/healthz
+# test https
+curl -i https://${ASB_DOMAIN}/memory/healthz
 
 # test https
 curl https://${ASB_DOMAIN}/memory/version
@@ -272,12 +272,12 @@ az group delete -y --no-wait -g $ASB_RG_SPOKE
 
 ### Challenge 1
 
-- TODO - add https redirect here
+- [Redirect `HTTP` requests to `HTTPS` in App Gateway](./challenges/blocked-traffic-dashboard/README.md)
 
 Here are some ideas for `next steps`
 
-- Create a dashboard visualizing blocked traffic
-- Add ghcr.io as a container registry
+- [Create a dashboard visualizing blocked traffic](./challenges/redirect-http-to-https/README.md)
+- [Add ghcr.io as a container registry](./challenges/github-container-registry/README.md)
 - Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
 - Explore `Azure Log Analytics` for observability
 - Explore an idea from your experiences / upcoming customer projects
