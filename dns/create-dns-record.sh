@@ -9,6 +9,8 @@ DNS_ZONE_RG=TLD
 # name of DNS Zone for the hack
 DNS_ZONE_NAME=aks-sb.com
 
+# TODO: check if files exist is keeping the txt file option for passing configs
+
 # team name to be used for dns record
 # TODO:
 #   get team name from somewhere.
