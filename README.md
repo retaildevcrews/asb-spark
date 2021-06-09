@@ -163,7 +163,7 @@ export ASB_TENANT_ID=$(az account show --query tenantId -o tsv)
 
 ```
 
-#### Resource Groups
+#### Create Resource Groups
 
 ```bash
 
