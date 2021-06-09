@@ -194,6 +194,10 @@ export ASB_SPOKE_VNET_ID=$(az deployment group show -g $ASB_RG_SPOKE -n spoke-BU
 # save env vars
 ./saveenv.sh -y
 
+```
+
+```bash
+
 # validate env vars
 echo $ASB_VNET_HUB_ID
 echo $ASB_NODEPOOLS_SUBNET_ID
@@ -221,6 +225,10 @@ az deployment group create -g $ASB_RG_CORE \
      aksIngressControllerCertificate="$(echo $INGRESS_CERT | base64 -d)" \
      aksIngressControllerKey="$(echo $INGRESS_KEY | base64 -d)"
 
+```
+
+```bash
+
 # get the name of the deployment key vault
 export ASB_KV_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.keyVaultName.value -o tsv)
 
@@ -229,6 +237,10 @@ export ASB_AKS_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_
 
 # Get the public IP of our App gateway
 export ASB_AKS_PIP=$(az network public-ip show -g $ASB_RG_SPOKE --name pip-BU0001A0008-00 --query ipAddress -o tsv)
+
+```
+
+```bash
 
 # Get the AKS Ingress Controller Managed Identity details.
 export ASB_TRAEFIK_RESOURCE_ID=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.aksIngressControllerPodManagedIdentityResourceId.value -o tsv)
