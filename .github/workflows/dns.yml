@@ -1,0 +1,27 @@
+name: setup-asb-dns
+
+on: [push]
+
+jobs:
+
+  setup-asb-dns:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Azure CLI script file
+      uses: azure/CLI@v1
+      with:
+        # TODO:
+        #   default to "latest" version if "azcliversion" is missing.
+        #   Should this be pinned to a specific version? If so, which version?
+        # azcliversion: 2.0.72
+        inlineScript: |
+          $GITHUB_WORKSPACE/dns/create-dns-record.sh

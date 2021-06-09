@@ -12,20 +12,13 @@ The initial setup script will create a service principal and give it access to t
 ./create-dns-sp.sh
 
 # The script will output the credential data for the service principal
-# Copy this into a GitHub secret for later use by the GitHub Action.
-
-# TODO: add name of github secret
+# Copy this into a GitHub secret, "AZURE_CREDENTIALS", for later use by the GitHub Action.
 
 ```
 
 ## GitHub Action
 
-The GitHub Action can now use the service principal to update the required DNS Zone on behalf of the hack participants.
-
-TODO:
-
-- add link to github action workflow file
-- use <https://github.com/marketplace/actions/azure-cli-action>
+The [GitHub Action](../.github/workflows/dns.yml) can now use the service principal to update the required DNS Zone on behalf of the hack participants.
 
 ```bash
 
