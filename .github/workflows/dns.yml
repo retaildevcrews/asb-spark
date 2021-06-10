@@ -19,11 +19,12 @@ jobs:
     - name: Azure CLI script file
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.42.2
+        azcliversion: 2.24.2
         inlineScript: |
-          ENV_FILE="${GITHUB_REF#refs/*/}.asb.env"
+          BRANCH_NAME=${GITHUB_REF#refs/*/}
+          ENV_FILE="${BRANCH_NAME}.asb.env"
           if [ -f $ENV_FILE ]
           then
-            source ENV_FILE
+            source $ENV_FILE
             $GITHUB_WORKSPACE/dns/create-dns-record.sh
           fi
