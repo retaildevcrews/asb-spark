@@ -71,11 +71,14 @@ git branch -a | grep $ASB_TEAM_NAME
 
 ### Create git branch
 
-> Do not PR a `cluster branch` into main
+> Do not PR a `cluster branch` into main.
+>
+> The cluster branch name must be the same as the Team name.
 
 ```bash
 
 # create a branch for your cluster
+# Do not change the branch name from $ASB_TEAM_NAME
 git checkout -b $ASB_TEAM_NAME
 git push -u origin $ASB_TEAM_NAME
 
