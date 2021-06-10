@@ -15,13 +15,10 @@ Create a Kubernetes manifest file (yaml) to define and create the appropriate re
     args:
         -l  "1000", -r, -s https://<your subdomain name>.aks-sb.com, -f memory-benchmark.json , --prometheus
 
-### Bonus
-Modified arguments to have Loderunner (lr8) generate approximately 50 req/sec.
-
 
 ### Validate 
 
-After have applied your yaml file you can check your pod log as follow:
+After have applied your yaml file you can check your pod logs as follow:
 
 
 ```bash
@@ -31,6 +28,8 @@ kubectl get pods -n ngsa
 # Get pod logs for NGSA app e.g "ngsa-memory-79d5bb5cd7-dhwvf", utilize the "--tail" parameter to only get the last 10 log entries, then verify that the Date/time for each log entry is about 1 second apart.
 kubectl logs <your ngsa-memory pod name> -n ngsa --tail 10
 ```
+### Bonus
+Modified arguments to have Loderunner (lr8) generate approximately 50 req/sec.
 
 ## Resources
 - [Do we need WebV ??????????????](https://github.com/microsoft/webvalidate)
