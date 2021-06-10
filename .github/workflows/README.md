@@ -34,8 +34,23 @@ SP_OBJECT_ID=$(az ad sp show --id $SP_NAME --query objectId -o tsv)
 # fetch resource ID of DNS Zone
 DNS_ZONE_ID=$(az network dns zone show -n $DNS_ZONE_NAME -g $DNS_ZONE_RG --query id -o tsv)
 
+# fetch resource id of the DNS Zone resource group
+DNS_ZONE_RG_ID=$(az group show -n $DNS_ZONE_RG --query id -o tsv)
+
+# create the custom role to only manage "A" records.
+az role definition create --role-definition "{
+  'Name': 'github-action-dns',
+  'Description': 'Custom role for GitHub Action to only manage DNS A records.',
+  'AssignableScopes': ['$DNS_ZONE_RG_ID'],
+  'Actions': [
+    'Microsoft.Network/dnszones/A/read',
+    'Microsoft.Network/dnszones/A/write',
+    'Microsoft.Network/dnszones/A/delete'
+  ]
+}"
+
 # add role assignment to allow service principal to manage dns records
-az role assignment create --role "DNS Zone Contributor" --assignee-object-id $SP_OBJECT_ID --assignee-principal-type "ServicePrincipal" --scope $DNS_ZONE_ID
+az role assignment create --role "github-action-dns" --assignee-object-id $SP_OBJECT_ID --assignee-principal-type "ServicePrincipal" --scope $DNS_ZONE_ID
 
 # Copy the output below into a GitHub secret named 'AZURE_CREDENTIALS'"
 echo "$AZURE_CREDENTIALS"
