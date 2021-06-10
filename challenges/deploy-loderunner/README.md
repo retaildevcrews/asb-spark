@@ -32,8 +32,6 @@ kubectl logs <your ngsa-memory pod name> -n ngsa --tail 10
 Modify the input arguments to have Loderunner (lr8) generate approximately 50 req/sec.
 
 ## Resources
-
-- [Do we need WebV ??????????????](https://github.com/microsoft/webvalidate)
 - [K8 Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
 - [Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 - [Static-pod](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
