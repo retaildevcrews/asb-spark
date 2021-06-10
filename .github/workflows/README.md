@@ -2,13 +2,15 @@
 
 This documentation walks through the steps needed to configure DNS updates through GitHub actions.
 
-Prerequisite:
+Prerequisites:
 
 - Access to the subscription where the DNS Zone is located
 - Permissions to create service principals and assign roles
 - Permissions to add GitHub Action secrets to the repo
 
 ## Initial Setup
+
+> You should only run this one time per repo
 
 Create a service principal and give it permissions to manage DNS records in the DNS Zone for the hack.
 
@@ -44,9 +46,5 @@ echo "$AZURE_CREDENTIALS"
 
 The [GitHub Action](./dns.yml) can now use the service principal to update the required DNS Zone on behalf of the hack participants.
 
-```bash
-
-# a GitHub Action is already configured to run this script when a hack participant pushes their branch changes to GitHub.
-./create-dns-record.sh
-
-```
+- a GitHub Action is configured to run this script when a hack participant pushes their branch changes to GitHub.
+- `./create-dns-record.sh`
