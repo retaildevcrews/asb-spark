@@ -18,8 +18,21 @@ Create a Kubernetes manifest file (yaml) to define and create the appropriate re
 ### Bonus
 Modified arguments to have Loderunner (lr8) generate approximately 50 req/sec.
 
+
+### Validate 
+
+After have applied your yaml file you can check your pod log as follow:
+
+
+```bash
+# Get pods under ngsa namespace and locate the loderunner pod e.g. "l8r-load-1" and make sure it is up and runnning.
+kubectl get pods -n ngsa
+
+# Get pod logs for NGSA app e.g "ngsa-memory-79d5bb5cd7-dhwvf", utilize the "--tail" parameter to only get the last 10 log entries, then verify that the Date/time for each log entry is about 1 second apart.
+kubectl logs <your ngsa-memory pod name> -n ngsa --tail 10
+```
+
 ## Resources
-- TODO: Add more information about K8 commands ?? 
 - [Do we need WebV ??????????????](https://github.com/microsoft/webvalidate)
 - [K8 Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
 - [Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
