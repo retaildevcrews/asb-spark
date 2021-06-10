@@ -117,7 +117,7 @@ export ASB_GEO_LOCATION=centralus
 
 #### AAD
 
-````bash
+```bash
 
 # verify AAD admin group name
 echo $ASB_CLUSTER_ADMIN_GROUP
@@ -126,7 +126,7 @@ echo $ASB_CLUSTER_ADMIN_GROUP
 export ASB_CLUSTER_ADMIN_ID=$(az ad group show -g $ASB_CLUSTER_ADMIN_GROUP --query objectId -o tsv)
 echo $ASB_CLUSTER_ADMIN_ID
 
-````
+```
 
 #### Git Setup
 
@@ -238,10 +238,6 @@ export ASB_AKS_NAME=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_
 # Get the public IP of our App gateway
 export ASB_AKS_PIP=$(az network public-ip show -g $ASB_RG_SPOKE --name pip-BU0001A0008-00 --query ipAddress -o tsv)
 
-```
-
-```bash
-
 # Get the AKS Ingress Controller Managed Identity details.
 export ASB_TRAEFIK_RESOURCE_ID=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.aksIngressControllerPodManagedIdentityResourceId.value -o tsv)
 export ASB_TRAEFIK_CLIENT_ID=$(az deployment group show -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME} --query properties.outputs.aksIngressControllerPodManagedIdentityClientId.value -o tsv)
@@ -276,12 +272,6 @@ cat templates/ngsa-ingress.yaml | envsubst > gitops/ngsa/ngsa-ingress.yaml
 # update flux.yaml
 rm -f flux.yaml
 cat templates/flux.yaml | envsubst  > flux.yaml
-
-# get AKS credentials
-az aks get-credentials -g $ASB_RG_CORE -n $ASB_AKS_NAME
-
-# rename context for simplicity
-kubectl config rename-context $ASB_AKS_NAME $ASB_TEAM_NAME
 
 ```
 
