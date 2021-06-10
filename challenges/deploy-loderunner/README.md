@@ -2,9 +2,7 @@
 
 ## Background
 
-We need to create load test for our NGSA application, in order to do that we will need to run our end-to-end test tool Loderunner.
-
-Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) with the following data, which will  generate approximately 1 req/sec.
+To create a load test for our NGSA application, we need to run our end-to-end test tool, Loderunner, which generates https requests and sends them to our NGSA application. The Loderunner application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy loderunner. Using the following inputs, Loderunner will generate approximately 1 request per second when deployed.More about Loderunner inputs can be found [here](#loderunner-parameters)
 
     container:
         ghcr.io/retaildevcrews/ngsa-lr:beta
@@ -29,7 +27,7 @@ kubectl get pods -n ngsa
 kubectl logs <your ngsa-memory pod name> -n ngsa --tail 10
 ```
 ### Bonus
-Modify arguments to have Loderunner (lr8) generate approximately 50 req/sec.
+Modify the input arguments to have Loderunner (lr8) generate approximately 50 req/sec.
 
 ## Resources
 - [Do we need WebV ??????????????](https://github.com/microsoft/webvalidate)
@@ -40,5 +38,5 @@ Modify arguments to have Loderunner (lr8) generate approximately 50 req/sec.
 
 ## Hints
 
-#### Loderunner Parameters
+### Loderunner Parameters
 ![Loderunner Parameters](./images/../image/LodeRunnerParameters.PNG)
