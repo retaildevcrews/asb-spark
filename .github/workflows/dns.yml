@@ -19,9 +19,6 @@ jobs:
     - name: Azure CLI script file
       uses: azure/CLI@v1
       with:
-        # TODO:
-        #   default to "latest" version if "azcliversion" is missing.
-        #   Should this be pinned to a specific version? If so, which version?
-        # azcliversion: 2.0.72
+        azcliversion: 2.42.2
         inlineScript: |
           $GITHUB_WORKSPACE/dns/create-dns-record.sh
