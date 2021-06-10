@@ -21,4 +21,9 @@ jobs:
       with:
         azcliversion: 2.42.2
         inlineScript: |
-          $GITHUB_WORKSPACE/dns/create-dns-record.sh
+          ENV_FILE="${GITHUB_REF#refs/*/}.asb.env"
+          if [ -f $ENV_FILE ]
+          then
+            source ENV_FILE
+            $GITHUB_WORKSPACE/dns/create-dns-record.sh
+          fi

@@ -188,13 +188,9 @@ az aks get-credentials -g $ASB_RG_CORE -n $ASB_AKS_NAME
 kubectl config rename-context $ASB_AKS_NAME $ASB_TEAM_NAME
 
 # save dns configs for this deployment.
-# TODO:
-#   what are other options for getting this data to the github action?
-#   maybe use the .env file that the user checks in to their branch?
-#   the action needs ASB_TEAM_NAME and the public ip address of the gateway.
-rm -f dns/dns-name.txt
-echo $ASB_TEAM_NAME > dns/dns-name.txt
-rm -f dns/public-ip-address.txt
-echo $ASB_AKS_PIP > dns/public-ip-address.txt
+# rm -f dns/dns-name.txt
+# echo $ASB_TEAM_NAME > dns/dns-name.txt
+# rm -f dns/public-ip-address.txt
+# echo $ASB_AKS_PIP > dns/public-ip-address.txt
 
 echo "add DNS A record - $ASB_TEAM_NAME  $ASB_AKS_PIP"
