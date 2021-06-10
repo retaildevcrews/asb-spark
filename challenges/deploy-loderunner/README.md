@@ -2,7 +2,7 @@
 
 ## Background
 
-To create a load test for our NGSA application, we need to run our end-to-end test tool (Loderunner) which generates https requests and sends them to our NGSA application. The Loderunner application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy Loderunner. Using the following inputs, Loderunner will generate approximately 1 request per second when deployed. More about Loderunner inputs can be found [here](#loderunner-parameters). These are the inputs needed to deploy Loderunner on our AKS cluster.
+To create a load test for our NGSA application, we need to run our end-to-end test tool (Loderunner) which generates https requests and sends them to our NGSA application. The Loderunner application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy Loderunner. Using the following inputs, Loderunner will generate approximately 1 request per second when deployed. More about Loderunner inputs can be found [here](#loderunner). These are the inputs needed to deploy Loderunner on our AKS cluster.
 
 ```yaml
 
@@ -19,17 +19,7 @@ args:
 
 ### Validate
 
-After have applied your yaml file you can check your pod logs as follow:
-
-```bash
-
-# Get pods under ngsa namespace and locate the loderunner pod e.g. "l8r-load-1" and make sure it is up and runnning.
-kubectl get pods -n ngsa
-
-# Get pod logs for NGSA app e.g "ngsa-memory-79d5bb5cd7-dhwvf", utilize the "--tail" parameter to only get the last 10 log entries, then verify that the Date/time for each log entry is about 1 second apart.
-kubectl logs <your ngsa-memory pod name> -n ngsa --tail 10
-
-```
+After have applied your yaml file you can check your loderunner pod logs validate that HTTP requests are being sent.
 
 ### Bonus
 
@@ -43,6 +33,23 @@ Modify the input arguments to have Loderunner (lr8) generate approximately 50 re
 
 ## Hints
 
-### Loderunner Parameters
 
+### Loderunner
+
+#### Running Loderunner from command line
+
+```bash
+# pull image from GitHub Container Repository 
+docker pull ghcr.io/retaildevcrews/ngsa-lr:beta
+
+# run loderunner with --help option; this should output command line options shown below
+docker run ghcr.io/retaildevcrews/ngsa-lr:beta --help
+```
 ![Loderunner Parameters](./images/../image/LodeRunnerParameters.PNG)
+
+#### Sample Interactive Loderunner Command
+
+```bash
+# after running this command, you should see json output at the command line describing HTTP requests
+docker run ghcr.io/retaildevcrews/ngsa-lr:beta -l "1000" -r -s https://worka.aks-sb.com -f memory-benchmark.json
+```
