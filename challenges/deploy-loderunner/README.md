@@ -2,7 +2,9 @@
 
 ## Background
 
-To create a load test for our NGSA application, we need to run our end-to-end test tool (Loderunner) which generates https requests and sends them to our NGSA application. The Loderunner application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy Loderunner. Using the following inputs, Loderunner will generate approximately 1 request per second when deployed. More about Loderunner inputs can be found [here](#loderunner-parameters).
+To create a load test for our NGSA application, we need to run our end-to-end test tool (Loderunner) which generates https requests and sends them to our NGSA application. The Loderunner application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy Loderunner. Using the following inputs, Loderunner will generate approximately 1 request per second when deployed. More about Loderunner inputs can be found [here](#loderunner-parameters). These are the inputs needed to deploy Loderunner on our AKS cluster.
+
+```yaml
 
 container:
     ghcr.io/retaildevcrews/ngsa-lr:beta
@@ -11,7 +13,9 @@ name:
 namespace:
     ngsa
 args:
-    -l  "1000", -r, -s https://< your subdomain name >.aks-sb.com, -f memory-benchmark.json , --prometheus
+    -l  "1000", -r, -s https://< your subdomain name >.aks-sb.com, -f memory-benchmark.json
+
+```
 
 ### Validate
 
