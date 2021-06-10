@@ -29,7 +29,7 @@ kubectl get pods -n ngsa
 kubectl logs <your ngsa-memory pod name> -n ngsa --tail 10
 ```
 ### Bonus
-Modified arguments to have Loderunner (lr8) generate approximately 50 req/sec.
+Modify arguments to have Loderunner (lr8) generate approximately 50 req/sec.
 
 ## Resources
 - [Do we need WebV ??????????????](https://github.com/microsoft/webvalidate)
