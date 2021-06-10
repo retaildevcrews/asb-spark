@@ -187,10 +187,4 @@ az aks get-credentials -g $ASB_RG_CORE -n $ASB_AKS_NAME
 # rename context for simplicity
 kubectl config rename-context $ASB_AKS_NAME $ASB_TEAM_NAME
 
-# save dns configs for this deployment.
-# rm -f dns/dns-name.txt
-# echo $ASB_TEAM_NAME > dns/dns-name.txt
-# rm -f dns/public-ip-address.txt
-# echo $ASB_AKS_PIP > dns/public-ip-address.txt
-
 echo "add DNS A record - $ASB_TEAM_NAME  $ASB_AKS_PIP"

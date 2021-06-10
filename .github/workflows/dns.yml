@@ -22,9 +22,9 @@ jobs:
         azcliversion: 2.24.2
         inlineScript: |
           BRANCH_NAME=${GITHUB_REF#refs/*/}
-          ENV_FILE="${BRANCH_NAME}.asb.env"
+          ENV_FILE="${GITHUB_WORKSPACE}/${BRANCH_NAME}.asb.env"
           if [ -f $ENV_FILE ]
           then
             source $ENV_FILE
-            $GITHUB_WORKSPACE/dns/create-dns-record.sh
+            $GITHUB_WORKSPACE/.github/workflows/create-dns-record.sh
           fi

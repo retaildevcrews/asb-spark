@@ -1,29 +1,10 @@
 #!/bin/bash
 
-# change to this directory
-cd $(dirname $0)
-
 # resource group of DNS Zone for the hack
 DNS_ZONE_RG=TLD
 
 # name of DNS Zone for the hack
 DNS_ZONE_NAME=aks-sb.com
-
-# if [ ! -f "dns-name.txt" ]
-# then
-#   exit
-# fi
-
-# if [ ! -f "public-ip-address.txt" ]
-# then
-#   exit
-# fi
-
-# team name to be used for dns record
-# ASB_TEAM_NAME=$(cat dns-name.txt)
-
-# public IP address of app gateway
-# ASB_AKS_PIP=$(cat public-ip-address.txt)
 
 if [ -z "$ASB_TEAM_NAME" ]
 then
