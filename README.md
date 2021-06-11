@@ -1,29 +1,20 @@
-# AKS Secure Baseline Hack
+# AKS Secure Baseline OpenHack
 
-> Welcome to the Patterns and Practices (PnP) AKS Secure Baseline (ASB) hack!
+> Welcome to the Patterns and Practices (PnP) AKS Secure Baseline (ASB) OpenHack!
 
 - The Patterns and Practices AKS Secure Baseline repo is located [here](https://github.com/mspnp/aks-secure-baseline)
-  - This repo is a summarization specifically for the hack and `should not be used for production deployments`
+  - This repo is a summarization specifically for the OpenHack and `should not be used for production deployments`
   - Please refer to the PnP repo as the `upstream repo`
 
 ## Filing Bugs
 
 > Please capture any bugs, issues or ideas on the `GitHub Board`
 
-## Before Deploying ASB
-
-- go to [idweb](https://idweb/) to setup a security group (requires VPN)
-- create a security group
-  - mail-enabled is optional
-  - do not use spaces in the name
-- add yourself and your team to the security group
-- AAD propogation can take up to 30 minutes
-
 ## Deploying ASB
 
 ### Create Codespace
 
-- The `AKS Secure Baseline` repo for the hack is at [github/retaildevcrews/asb-spark](https://github.com/retaildevcrews/asb-spark)
+- The `AKS Secure Baseline` repo for the OpenHack is at [github/retaildevcrews/asb-spark](https://github.com/retaildevcrews/asb-spark)
 - Open this repo in your web browser
 - Create a new `Codespace` in this repo
   - If the `fork option` appears, you need to request permission to the repo
@@ -31,20 +22,19 @@
 
 ```bash
 
+# login to your Azure subscription
+az login
 
-# login to the Azure subscription for the hack
-az login -t $ASB_TENANT_ID
-
-# verify the correct subscription - bartr-cloudatx-asb
+# verify the correct subscription
 az account show
 
 # install kubectl and kubelogin
 sudo az aks install-cli
 
-# set your security group name (created above); replace [YourSecurityGroupName] before running
-export ASB_CLUSTER_ADMIN_GROUP=[YourSecurityGroupName]
+# set your security group name
+export ASB_CLUSTER_ADMIN_GROUP=asb-hack
 
-# verify your security group membership
+# verify you are a member of the security group
 az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o table
 
 ```
@@ -71,9 +61,9 @@ git branch -a | grep $ASB_TEAM_NAME
 
 ### Create git branch
 
-> Do not PR a `cluster branch` into main.
+> Do not PR a `cluster branch` into main
 >
-> The cluster branch name must be the same as the Team name.
+> The cluster branch name must be the same as the Team name
 
 ```bash
 
@@ -84,11 +74,32 @@ git push -u origin $ASB_TEAM_NAME
 
 ```
 
+### Choose your deployment region
+
+```bash
+
+### choose the closest pair - not all regions support ASB
+export ASB_LOCATION=eastus2
+export ASB_GEO_LOCATION=centralus
+
+export ASB_LOCATION=centralus
+export ASB_GEO_LOCATION=eastus2
+
+### TODO - add other regions once we get the capacity list
+
+# run the saveenv.sh script at any time to save ASB_* variables to ~/ASB_TEAM_NAME.asb.env
+./saveenv.sh
+
+# if your terminal environment gets cleared, you can source the file to reload the environment variables
+# source ${ASB_TEAM_NAME}.asb.env
+
+```
+
 ### Setup AKS Secure Baseline
 
-> This section takes 45 - 60 minutes to complete
+> Complete setup takes about an hour
 
-#### Initial Setup
+#### Validate env vars
 
 ```bash
 
@@ -96,25 +107,12 @@ git push -u origin $ASB_TEAM_NAME
 echo $ASB_TEAM_NAME
 
 # verify the correct subscription
-az account show
+az account show -o table
 
 # check certs
-echo $APP_GW_CERT
-echo $INGRESS_CERT
-echo $INGRESS_KEY
-
-# set default location
-export ASB_LOCATION=eastus2
-
-# set default geo redundant location for ACR
-# ASB_LOCATION and ASB_GEO_LOCATION must be different regions
-export ASB_GEO_LOCATION=centralus
-
-# run the saveenv.sh script at any time to save ASB_* variables to ~/ASB_TEAM_NAME.asb.env
-./saveenv.sh
-
-# if your terminal environment gets cleared, you can source the file to reload the environment variables
-# source ~/${ASB_TEAM_NAME}.asb.env
+if [ -z $APP_GW_CERT ]; then echo "App Gateway cert not set correctly"; fi
+if [ -z $INGRESS_CERT ]; then echo "Ingress cert not set correctly"; fi
+if [ -z $INGRESS_KEY ]; then echo "Ingress key not set correctly"; fi
 
 ```
 
@@ -122,11 +120,11 @@ export ASB_GEO_LOCATION=centralus
 
 ```bash
 
-# verify AAD admin group name
-echo $ASB_CLUSTER_ADMIN_GROUP
-
 # get AAD cluster admin group
 export ASB_CLUSTER_ADMIN_ID=$(az ad group show -g $ASB_CLUSTER_ADMIN_GROUP --query objectId -o tsv)
+
+# verify AAD admin group
+echo $ASB_CLUSTER_ADMIN_GROUP
 echo $ASB_CLUSTER_ADMIN_ID
 
 ```
@@ -180,26 +178,22 @@ az group create -n $ASB_RG_CORE -l $ASB_LOCATION
 #### Setup Network
 
 ```bash
-# this section takes 30-45 minutes to complete
+# this section takes 15-20 minutes to complete
 
 # create hub network
-az deployment group create -g $ASB_RG_HUB -f networking/hub-default.json -p location=${ASB_LOCATION}
+az deployment group create -g $ASB_RG_HUB -f networking/hub-default.json -p location=${ASB_LOCATION} --query name
 export ASB_VNET_HUB_ID=$(az deployment group show -g $ASB_RG_HUB -n hub-default --query properties.outputs.hubVnetId.value -o tsv)
 
 # create spoke network
-az deployment group create -g $ASB_RG_SPOKE -f networking/spoke-BU0001A0008.json -p location=${ASB_LOCATION} hubVnetResourceId="${ASB_VNET_HUB_ID}"
+az deployment group create -g $ASB_RG_SPOKE -f networking/spoke-BU0001A0008.json -p location=${ASB_LOCATION} hubVnetResourceId="${ASB_VNET_HUB_ID}" --query name
 export ASB_NODEPOOLS_SUBNET_ID=$(az deployment group show -g $ASB_RG_SPOKE -n spoke-BU0001A0008 --query properties.outputs.nodepoolSubnetResourceIds.value -o tsv)
 
 # create Region A hub network
-az deployment group create -g $ASB_RG_HUB -f networking/hub-regionA.json -p location=${ASB_LOCATION} nodepoolSubnetResourceIds="['${ASB_NODEPOOLS_SUBNET_ID}']"
+az deployment group create -g $ASB_RG_HUB -f networking/hub-regionA.json -p location=${ASB_LOCATION} nodepoolSubnetResourceIds="['${ASB_NODEPOOLS_SUBNET_ID}']" --query name
 export ASB_SPOKE_VNET_ID=$(az deployment group show -g $ASB_RG_SPOKE -n spoke-BU0001A0008 --query properties.outputs.clusterVnetResourceId.value -o tsv)
 
 # save env vars
 ./saveenv.sh -y
-
-```
-
-```bash
 
 # validate env vars
 echo $ASB_VNET_HUB_ID
@@ -211,6 +205,8 @@ echo $ASB_SPOKE_VNET_ID
 #### Setup AKS
 
 ```bash
+
+### This takes 15-20 minutes
 
 # create AKS
 az deployment group create -g $ASB_RG_CORE \
@@ -226,9 +222,12 @@ az deployment group create -g $ASB_RG_CORE \
      k8sControlPlaneAuthorizationTenantId=${ASB_TENANT_ID} \
      appGatewayListenerCertificate=${APP_GW_CERT} \
      aksIngressControllerCertificate="$(echo $INGRESS_CERT | base64 -d)" \
-     aksIngressControllerKey="$(echo $INGRESS_KEY | base64 -d)"
+     aksIngressControllerKey="$(echo $INGRESS_KEY | base64 -d)" \
+     --query name
 
 ```
+
+#### Set env vars
 
 ```bash
 
@@ -255,24 +254,22 @@ export ASB_INGRESS_KEY_NAME=appgw-ingress-internal-aks-ingress-key
 
 ```
 
-#### Setup GitOps
-
-##### Setup Traefik
+### Setup Ingress (Traefik)
 
 ```bash
 
 rm -f gitops/ingress/02-traefik-config.yaml
 cat templates/traefik-config.yaml | envsubst > gitops/ingress/02-traefik-config.yaml
+
 rm -f gitops/ngsa/ngsa-ingress.yaml
 cat templates/ngsa-ingress.yaml | envsubst > gitops/ngsa/ngsa-ingress.yaml
 
 ```
 
-##### Setup Flux
+### Setup GitOps (Flux)
 
 ```bash
 
-# update flux.yaml
 rm -f flux.yaml
 cat templates/flux.yaml | envsubst  > flux.yaml
 
@@ -280,15 +277,11 @@ cat templates/flux.yaml | envsubst  > flux.yaml
 
 ### Push Updates
 
-> The setup process creates 5 new files. GitOps will not work unless these files are merged into your branch.
+> The setup process creates 4 new files. GitOps will not work unless these files are merged into your branch.
 
 ```bash
 
-# load the env vars created by setup
-# you can reload the env vars at any time by sourcing the file
-source ${ASB_TEAM_NAME}.asb.env
-
-# check deltas - there should be 5 new files
+# check deltas - there should be 4 new files
 git status
 
 # push to your branch
@@ -331,7 +324,7 @@ kubectl apply -f gitops
 
 ```
 
-### Setup Flux
+### Configure Flux
 
 > ASB uses `Flux CD` for `GitOps`
 
@@ -393,7 +386,7 @@ kubectl delete ns cluster-baseline-settings
 # check the pods
 kubectl get pods -A
 
-# start over at Setup Flux
+# start over at Configure Flux
 
 ```
 
@@ -468,8 +461,8 @@ Here are some ideas for `next steps`
 - Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
 - Explore `Azure Log Analytics` for observability
 - Explore an idea from your experiences / upcoming customer projects
-- Fix a bug that you ran into during the hack
-- Most importantly, `have fun and learn at the hack!`
+- Fix a bug that you ran into during the OpenHack
+- Most importantly, `have fun and learn at the OpenHack!`
 
 ### Random Notes
 
