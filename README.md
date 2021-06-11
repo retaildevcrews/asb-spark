@@ -169,6 +169,7 @@ az group create -n $ASB_RG_CORE -l $ASB_LOCATION
 #### Setup Network
 
 ```bash
+
 # this section takes 15-20 minutes to complete
 
 # create hub network
@@ -197,7 +198,7 @@ echo $ASB_SPOKE_VNET_ID
 
 ```bash
 
-### This takes 15-20 minutes
+### this section takes 15-20 minutes
 
 # create AKS
 az deployment group create -g $ASB_RG_CORE \
