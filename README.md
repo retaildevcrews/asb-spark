@@ -320,7 +320,20 @@ To manually deploy the entire stack for testing
 
 ```bash
 
-kubectl apply -f gitops
+# k is an alias for kubectl
+# kaf is an alias for kubectl apply -f
+
+# see all kubectl aliases
+alias | grep kubectl
+
+kaf gitops
+kaf gitops/kube-system
+kaf gitops/cluster-baseline-settings
+kaf gitops/ngsa
+kaf gitops/ingress
+
+# check pods
+k get po -A
 
 ```
 
