@@ -327,6 +327,9 @@ kaf gitops/ingress
 # check pods
 k get po -A
 
+# ingress (Traefik) takes ~2 min to start
+k get po -n ingress
+
 ```
 
 ### Configure Flux
@@ -483,5 +486,8 @@ az aks show -n $ASB_AKS_NAME -g rg-bu0001a0008-$ASB_TEAM_NAME --query provisioni
 
 # disable policies (last resort for debugging)
 az aks disable-addons --addons azure-policy -g rg-bu0001a0008-$ASB_TEAM_NAME -n $ASB_AKS_NAME
+
+# delete your AKS cluster (keep your network)
+az deployment group delete -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME}
 
 ```
