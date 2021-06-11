@@ -129,23 +129,14 @@ echo $ASB_CLUSTER_ADMIN_ID
 
 ```
 
-#### Git Setup
-
-```bash
-
-# set git repo
-export ASB_GIT_REPO=$(git remote -v | cut -f 2 | cut -f 1 -d " " | head -n 1)
-export ASB_GIT_PATH=gitops
-
-# set git branch
-# don't use main branch
-export ASB_GIT_BRANCH=$(git status  --porcelain --branch | head -n 1 | cut -f 2 -d " " | cut -f 1 -d .)
-
-```
-
 #### Set variables for deployment
 
 ```bash
+
+# set GitOps repo
+export ASB_GIT_REPO=$(git remote -v | cut -f 2 | cut -f 1 -d " " | head -n 1)
+export ASB_GIT_BRANCH=$ASB_TEAM_NAME
+export ASB_GIT_PATH=gitops
 
 # set default domain name
 export ASB_DNS_ZONE=aks-sb.com
