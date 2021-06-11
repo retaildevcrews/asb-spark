@@ -88,7 +88,7 @@ export ASB_GEO_LOCATION=eastus2
 ### TODO - add other regions once we get the capacity list
 
 # run the saveenv.sh script at any time to save ASB_* variables to ~/ASB_TEAM_NAME.asb.env
-./saveenv.sh
+./saveenv.sh -y
 
 # if your terminal environment gets cleared, you can source the file to reload the environment variables
 # source ${ASB_TEAM_NAME}.asb.env
