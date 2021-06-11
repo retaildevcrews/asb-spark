@@ -316,7 +316,7 @@ To manually deploy the entire stack for testing
 # kaf is an alias for kubectl apply -f
 
 # see all kubectl aliases
-alias | grep kubectl
+alias | sort | grep kubectl
 
 kaf gitops
 kaf gitops/kube-system
