@@ -246,22 +246,19 @@ export ASB_INGRESS_KEY_NAME=appgw-ingress-internal-aks-ingress-key
 
 ```
 
-### Setup Ingress (Traefik)
+### Create setup files
 
 ```bash
 
+# setup traefik config
 rm -f gitops/ingress/02-traefik-config.yaml
 cat templates/traefik-config.yaml | envsubst > gitops/ingress/02-traefik-config.yaml
 
+# setup app ingress
 rm -f gitops/ngsa/ngsa-ingress.yaml
 cat templates/ngsa-ingress.yaml | envsubst > gitops/ngsa/ngsa-ingress.yaml
 
-```
-
-### Setup GitOps (Flux)
-
-```bash
-
+# setup GitOps (flux-cd)
 rm -f flux.yaml
 cat templates/flux.yaml | envsubst  > flux.yaml
 
@@ -269,7 +266,9 @@ cat templates/flux.yaml | envsubst  > flux.yaml
 
 ### Push Updates
 
-> The setup process creates 4 new files. GitOps will not work unless these files are merged into your branch.
+> The setup process creates 4 new files
+>
+> GitOps will not work unless these files are merged into your branch
 
 ```bash
 
@@ -304,34 +303,6 @@ kubectl get pods -A
 
 ```
 
-### Deploy Configuration and App (optional)
-
-> ASB is designed to use Flux for GitOps
-
-To manually deploy the entire stack for testing
-
-```bash
-
-# k is an alias for kubectl
-# kaf is an alias for kubectl apply -f
-
-# see all kubectl aliases
-alias | sort | grep kubectl
-
-kaf gitops
-kaf gitops/kube-system
-kaf gitops/cluster-baseline-settings
-kaf gitops/ngsa
-kaf gitops/ingress
-
-# check pods
-k get po -A
-
-# ingress (Traefik) takes ~2 min to start
-k get po -n ingress
-
-```
-
 ### Configure Flux
 
 > ASB uses `Flux CD` for `GitOps`
@@ -351,7 +322,7 @@ kubectl logs -n flux-cd -l app.kubernetes.io/name=flux
 
 ### Validate Ingress
 
-> ASB uses `Traefik` for `ingress`
+> ASB uses `Traefik` for ingress
 
 ```bash
 
@@ -362,9 +333,6 @@ kubectl get pods -n ingress
 ## Verify with curl
 ### this can take 1-2 minutes
 ### if you get a 502 error retry until you get 200
-
-# test https
-curl -i https://${ASB_DOMAIN}/memory/healthz
 
 # test https
 curl https://${ASB_DOMAIN}/memory/version
@@ -389,8 +357,6 @@ kubectl delete ns ngsa
 kubectl delete ns ingress
 kubectl delete ns cluster-baseline-settings
 
-# delete any additional namespaces you created
-
 # check the pods
 kubectl get pods -A
 
@@ -405,7 +371,7 @@ kubectl get pods -A
 - make sure to use a new ASB_TEAM_NAME
 - you must create a new branch or GitOps will fail on both clusters
 
-### Delete Resources
+## Delete Azure Resources
 
 > Do not just delete the resource groups
 
@@ -446,8 +412,6 @@ az group delete -y --no-wait -g $ASB_RG_SPOKE
 # delete from .kube/config
 kubectl config delete-context $ASB_TEAM_NAME
 
-### delete your git branch if desired
-
 # group deletion can take 10 minutes to complete
 az group list -o table | grep $ASB_TEAM_NAME
 
@@ -456,17 +420,39 @@ az group delete -y --no-wait -g $ASB_RG_SPOKE
 
 ```
 
+## Delete git branch
+
+```bash
+
+git checkout main
+git pull
+git push origin --delete $ASB_TEAM_NAME
+git fetch -pa
+git branch -D $ASB_TEAM_NAME
+
+```
+
 ## Challenges
 
 ### Challenge 1
 
+- [Create a dashboard visualizing blocked traffic](./challenges/redirect-http-to-https/README.md)
+
+### Challenge 2
+
 - [Redirect `HTTP` requests to `HTTPS` in App Gateway](./challenges/blocked-traffic-dashboard/README.md)
 
-Here are some ideas for `next steps`
+### Challenge 3
 
-- [Create a dashboard visualizing blocked traffic](./challenges/redirect-http-to-https/README.md)
 - [Add ghcr.io as a container registry](./challenges/github-container-registry/README.md)
+
+### Challenge 4
+
+- TODO - add link
 - Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
+
+### Other ideas for exploring
+
 - Explore `Azure Log Analytics` for observability
 - Explore an idea from your experiences / upcoming customer projects
 - Fix a bug that you ran into during the OpenHack
@@ -488,6 +474,7 @@ az aks show -n $ASB_AKS_NAME -g rg-bu0001a0008-$ASB_TEAM_NAME --query provisioni
 az aks disable-addons --addons azure-policy -g rg-bu0001a0008-$ASB_TEAM_NAME -n $ASB_AKS_NAME
 
 # delete your AKS cluster (keep your network)
+### TODO - this doesn't work completely
 az deployment group delete -g $ASB_RG_CORE -n cluster-${ASB_TEAM_NAME}
 
 ```
