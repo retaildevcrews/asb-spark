@@ -397,6 +397,8 @@ kubectl get pods -A
 
 ### Challenge 1
 
+> Challenges do not have step-by-step instructions
+
 - [Create a dashboard visualizing blocked traffic](./challenges/redirect-http-to-https/README.md)
 
 ### Challenge 2
