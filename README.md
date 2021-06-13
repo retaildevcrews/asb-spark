@@ -196,23 +196,24 @@ az group create -n $ASB_RG_CORE -l $ASB_LOCATION
 
 # create hub network
 az deployment group create -g $ASB_RG_HUB -f networking/hub-default.json -p location=${ASB_LOCATION} --query name
-export ASB_VNET_HUB_ID=$(az deployment group show -g $ASB_RG_HUB -n hub-default --query properties.outputs.hubVnetId.value -o tsv)
 
 # create spoke network
 az deployment group create -g $ASB_RG_SPOKE -f networking/spoke-BU0001A0008.json -p location=${ASB_LOCATION} hubVnetResourceId="${ASB_VNET_HUB_ID}" --query name
-export ASB_NODEPOOLS_SUBNET_ID=$(az deployment group show -g $ASB_RG_SPOKE -n spoke-BU0001A0008 --query properties.outputs.nodepoolSubnetResourceIds.value -o tsv)
 
 # create Region A hub network
 az deployment group create -g $ASB_RG_HUB -f networking/hub-regionA.json -p location=${ASB_LOCATION} nodepoolSubnetResourceIds="['${ASB_NODEPOOLS_SUBNET_ID}']" --query name
+
+```
+
+#### Set network env vars
+
+```bash
+
+export ASB_VNET_HUB_ID=$(az deployment group show -g $ASB_RG_HUB -n hub-default --query properties.outputs.hubVnetId.value -o tsv)
+export ASB_NODEPOOLS_SUBNET_ID=$(az deployment group show -g $ASB_RG_SPOKE -n spoke-BU0001A0008 --query properties.outputs.nodepoolSubnetResourceIds.value -o tsv)
 export ASB_SPOKE_VNET_ID=$(az deployment group show -g $ASB_RG_SPOKE -n spoke-BU0001A0008 --query properties.outputs.clusterVnetResourceId.value -o tsv)
 
-# save env vars
 ./saveenv.sh -y
-
-# validate env vars
-echo $ASB_VNET_HUB_ID
-echo $ASB_NODEPOOLS_SUBNET_ID
-echo $ASB_SPOKE_VNET_ID
 
 ```
 
@@ -241,7 +242,7 @@ az deployment group create -g $ASB_RG_CORE \
 
 ```
 
-#### Set env vars
+#### Set AKS env vars
 
 ```bash
 
@@ -263,7 +264,6 @@ export ASB_POD_MI_ID=$(az identity show -n podmi-ingress-controller -g $ASB_RG_C
 export ASB_INGRESS_CERT_NAME=appgw-ingress-internal-aks-ingress-tls
 export ASB_INGRESS_KEY_NAME=appgw-ingress-internal-aks-ingress-key
 
-# save env vars
 ./saveenv.sh -y
 
 ```
@@ -272,21 +272,21 @@ export ASB_INGRESS_KEY_NAME=appgw-ingress-internal-aks-ingress-key
 
 ```bash
 
-# setup traefik config
+# traefik config
 rm -f gitops/ingress/02-traefik-config.yaml
 cat templates/traefik-config.yaml | envsubst > gitops/ingress/02-traefik-config.yaml
 
-# setup app ingress
+# app ingress
 rm -f gitops/ngsa/ngsa-ingress.yaml
 cat templates/ngsa-ingress.yaml | envsubst > gitops/ngsa/ngsa-ingress.yaml
 
-# setup GitOps (flux-cd)
+# GitOps (flux)
 rm -f flux.yaml
 cat templates/flux.yaml | envsubst  > flux.yaml
 
 ```
 
-### Push Updates
+### Push to GitHub
 
 > The setup process creates 4 new files
 >
@@ -304,7 +304,7 @@ git push
 
 ```
 
-### Validation
+### AKS Validation
 
 ```bash
 
@@ -325,7 +325,7 @@ kubectl get pods -A
 
 ```
 
-### Configure Flux
+### Deploy Flux
 
 > ASB uses `Flux CD` for `GitOps`
 
@@ -382,7 +382,7 @@ kubectl delete ns cluster-baseline-settings
 # check the pods
 kubectl get pods -A
 
-# start over at Configure Flux
+# start over at Deploy Flux
 
 ```
 
@@ -392,6 +392,32 @@ kubectl get pods -A
 - start at `Set Team Name`
 - make sure to use a new ASB_TEAM_NAME
 - you must create a new branch or GitOps will fail on both clusters
+
+## Challenges
+
+### Challenge 1
+
+- [Create a dashboard visualizing blocked traffic](./challenges/redirect-http-to-https/README.md)
+
+### Challenge 2
+
+- [Redirect `HTTP` requests to `HTTPS` in App Gateway](./challenges/blocked-traffic-dashboard/README.md)
+
+### Challenge 3
+
+- [Add ghcr.io as a container registry](./challenges/github-container-registry/README.md)
+
+### Challenge 4
+
+- TODO - add link
+- Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
+
+### Other ideas for exploring
+
+- Explore `Azure Log Analytics` for observability
+- Explore an idea from your experiences / upcoming customer projects
+- Fix a bug that you ran into during the OpenHack
+- Most importantly, `have fun and learn at the OpenHack!`
 
 ## Delete Azure Resources
 
@@ -453,32 +479,6 @@ git fetch -pa
 git branch -D $ASB_TEAM_NAME
 
 ```
-
-## Challenges
-
-### Challenge 1
-
-- [Create a dashboard visualizing blocked traffic](./challenges/redirect-http-to-https/README.md)
-
-### Challenge 2
-
-- [Redirect `HTTP` requests to `HTTPS` in App Gateway](./challenges/blocked-traffic-dashboard/README.md)
-
-### Challenge 3
-
-- [Add ghcr.io as a container registry](./challenges/github-container-registry/README.md)
-
-### Challenge 4
-
-- TODO - add link
-- Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
-
-### Other ideas for exploring
-
-- Explore `Azure Log Analytics` for observability
-- Explore an idea from your experiences / upcoming customer projects
-- Fix a bug that you ran into during the OpenHack
-- Most importantly, `have fun and learn at the OpenHack!`
 
 ### Random Notes
 
