@@ -109,7 +109,7 @@ export ASB_GEO_LOCATION=eastasia
 export ASB_LOCATION=southafricanorth
 export ASB_GEO_LOCATION=southafricawest
 
-# run the saveenv.sh script at any time to save ASB_* variables to ~/ASB_TEAM_NAME.asb.env
+# run the saveenv.sh script at any time to save ASB_* variables to ASB_TEAM_NAME.asb.env
 ./saveenv.sh -y
 
 # if your terminal environment gets cleared, you can source the file to reload the environment variables
