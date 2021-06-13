@@ -85,7 +85,29 @@ export ASB_GEO_LOCATION=centralus
 export ASB_LOCATION=centralus
 export ASB_GEO_LOCATION=eastus2
 
-### TODO - add other regions once we get the capacity list
+export ASB_LOCATION=westus2
+export ASB_GEO_LOCATION=westcentralus
+
+export ASB_LOCATION=northeurope
+export ASB_GEO_LOCATION=westeurope
+
+export ASB_LOCATION=francecentral
+export ASB_GEO_LOCATION=francesouth
+
+export ASB_LOCATION=germanywestcentral
+export ASB_GEO_LOCATION=germanynorth
+
+export ASB_LOCATION=australiaeast
+export ASB_GEO_LOCATION=australiasoutheast
+
+export ASB_LOCATION=japaneast
+export ASB_GEO_LOCATION=japanwest
+
+export ASB_LOCATION=southeastasia
+export ASB_GEO_LOCATION=eastasia
+
+export ASB_LOCATION=southafricanorth
+export ASB_GEO_LOCATION=southafricawest
 
 # run the saveenv.sh script at any time to save ASB_* variables to ~/ASB_TEAM_NAME.asb.env
 ./saveenv.sh -y
