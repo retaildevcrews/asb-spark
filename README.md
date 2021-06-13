@@ -356,6 +356,34 @@ curl https://${ASB_DOMAIN}/memory/version
 
 ```
 
+## Challenges
+
+### Challenge 1
+
+> Challenges do not have step-by-step instructions
+
+- [Create a dashboard visualizing blocked traffic](./challenges/redirect-http-to-https/README.md)
+
+### Challenge 2
+
+- [Redirect `HTTP` requests to `HTTPS` in App Gateway](./challenges/blocked-traffic-dashboard/README.md)
+
+### Challenge 3
+
+- [Add ghcr.io as a container registry](./challenges/github-container-registry/README.md)
+
+### Challenge 4
+
+- TODO - add link
+- Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
+
+### Other ideas for exploring
+
+- Explore `Azure Log Analytics` for observability
+- Explore an idea from your experiences / upcoming customer projects
+- Fix a bug that you ran into during the OpenHack
+- Most importantly, `have fun and learn at the OpenHack!`
+
 ### Resetting the cluster
 
 > Reset the cluster to a known state
@@ -385,34 +413,6 @@ kubectl get pods -A
 - start at `Set Team Name`
 - make sure to use a new ASB_TEAM_NAME
 - you must create a new branch or GitOps will fail on both clusters
-
-## Challenges
-
-### Challenge 1
-
-> Challenges do not have step-by-step instructions
-
-- [Create a dashboard visualizing blocked traffic](./challenges/redirect-http-to-https/README.md)
-
-### Challenge 2
-
-- [Redirect `HTTP` requests to `HTTPS` in App Gateway](./challenges/blocked-traffic-dashboard/README.md)
-
-### Challenge 3
-
-- [Add ghcr.io as a container registry](./challenges/github-container-registry/README.md)
-
-### Challenge 4
-
-- TODO - add link
-- Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
-
-### Other ideas for exploring
-
-- Explore `Azure Log Analytics` for observability
-- Explore an idea from your experiences / upcoming customer projects
-- Fix a bug that you ran into during the OpenHack
-- Most importantly, `have fun and learn at the OpenHack!`
 
 ## Delete Azure Resources
 
