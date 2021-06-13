@@ -400,8 +400,8 @@ kubectl delete ns ngsa
 kubectl delete ns ingress
 kubectl delete ns cluster-baseline-settings
 
-# check the pods
-kubectl get pods -A
+# check the namespaces
+kubectl get ns
 
 # start over at Deploy Flux
 
