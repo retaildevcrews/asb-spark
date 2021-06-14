@@ -19,7 +19,7 @@ args:
 
 ```
 
-###Prerequisite
+### Prerequisite
 
 This challenge depends on [Pulling from GitHub Container Registry](../github-container-registry/README.md) to enable the cluster to pull container images from `ghcr.io` 
 
