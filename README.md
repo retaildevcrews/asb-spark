@@ -305,7 +305,7 @@ git push
 az aks get-credentials -g $ASB_RG_CORE -n $ASB_AKS_NAME
 
 # rename context for simplicity
-kubectl config rename-context $ASB_RG_CORE $ASB_TEAM_NAME
+kubectl config rename-context $ASB_AKS_NAME $ASB_TEAM_NAME
 
 # check the nodes
 # requires Azure login
