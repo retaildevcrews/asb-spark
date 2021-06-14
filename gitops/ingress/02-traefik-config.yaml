@@ -1,0 +1,59 @@
+apiVersion: aadpodidentity.k8s.io/v1
+kind: AzureIdentity
+metadata:
+  name: podmi-ingress-controller-identity
+  namespace: ingress
+spec:
+  type: 0
+  resourceID: /subscriptions/9b3afdd0-1f5f-4b45-ac30-02f377b9db92/resourceGroups/rg-johee3-core/providers/Microsoft.ManagedIdentity/userAssignedIdentities/podmi-ingress-controller
+  clientID: be9d4510-af31-45cf-9606-9064e24a82fd
+---
+apiVersion: aadpodidentity.k8s.io/v1
+kind: AzureIdentityBinding
+metadata:
+  name: podmi-ingress-controller-binding
+  namespace: ingress
+spec:
+  azureIdentity: podmi-ingress-controller-identity
+  selector: podmi-ingress-controller
+---
+
+apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
+kind: SecretProviderClass
+metadata:
+  name: aks-ingress-tls-secret-csi-akv
+  namespace: ingress
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "true"
+    keyvaultName: kv-aks-bpxx5jnaxrkyk 
+    objects:  |
+      array:
+        - |
+          objectName: appgw-ingress-internal-aks-ingress-tls
+          objectAlias: tls.crt
+          objectType: secret
+        - |
+          objectName: appgw-ingress-internal-aks-ingress-key
+          objectAlias: tls.key
+          objectType: secret
+    tenantId: 12d1a0e5-9d0a-4b24-9810-5d718de78502
+---
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik-watch-workloads
+  namespace: ngsa
+  labels:
+    app.kubernetes.io/name: traefik-ingress-ilb
+    app.kubernetes.io/instance: traefik-ingress-ilb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+- kind: ServiceAccount
+  name: traefik-ingress-controller
+  namespace: ingress
