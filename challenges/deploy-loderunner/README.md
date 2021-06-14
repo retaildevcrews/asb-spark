@@ -19,6 +19,10 @@ args:
 
 ```
 
+###Prerequisite
+
+This challenge depends on [Pulling from GitHub Container Registry](../github-container-registry/README.md) to enable the cluster to pull container images from `ghcr.io` 
+
 ### Validate
 
 After have applied your yaml file you can check your loderunner pod logs validate that HTTP requests are being sent.
