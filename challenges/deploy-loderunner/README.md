@@ -1,15 +1,15 @@
-# Deploy LodeRunner
+# Deploy WebV
 
 ## Background
 
-LodeRunner is our end-to-end test tool that generates https requests and sends them to our NGSA application. These https requests can be used to enable load tests and to verify that the NGSA application is handling https requests correctly. Sample commands showing how to run LodeRunner interactively from the command line can be found [here](#hints).
+WebV is our end-to-end test tool that generates https requests and sends them to our NGSA application. These https requests can be used to enable load tests and to verify that the NGSA application is handling https requests correctly. More information about running WebV interactively from the command line can be found [here](https://github.com/retaildevcrews/webvalidate/blob/main/README.md).
 
-The LodeRunner application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy LodeRunner. The inputs needed to deploy LodeRunner on our AKS cluster are shown below. Using these inputs, LodeRunner will generate approximately 1 request per second when deployed.
+The WebV application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy WebV. The inputs needed to deploy WebV on our AKS cluster are shown below. Using these inputs, WebV will generate approximately 1 request per second when deployed.
 
 ```yaml
 
 container:
-    ghcr.io/retaildevcrews/ngsa-lr:beta
+    ghcr.io/retaildevcrews/ngsa-webv:beta
 namespace:
     ngsa
 args:
@@ -23,11 +23,11 @@ This challenge depends on [Pulling from GitHub Container Registry](../github-con
 
 ### Validate
 
-After you have applied your yaml file you can check your LodeRunner pod logs to validate that HTTP requests are being sent.
+After you have applied your yaml file you can check your WebV pod logs to validate that HTTP requests are being sent.
 
 ### Bonus
 
-Modify the input arguments to have LodeRunner generate approximately 50 req/sec.
+Modify the input arguments to have WebV generate approximately 50 req/sec.
 
 ## Resources
 
@@ -38,23 +38,23 @@ Modify the input arguments to have LodeRunner generate approximately 50 req/sec.
 
 ## Hints
 
-### Running LodeRunner from command line
+### Running WebV from command line
 
 ```bash
 # pull image from GitHub Container Repository 
-docker pull ghcr.io/retaildevcrews/ngsa-lr:beta
+docker pull ghcr.io/retaildevcrews/webvalidate:beta
 
-# run LodeRunner with --help option; this should output command line options shown below
-docker run ghcr.io/retaildevcrews/ngsa-lr:beta --help
+# run WebV with --help option; this should output command line options shown below
+docker run ghcr.io/retaildevcrews/webvalidate:beta --help
 ```
 
-### Sample Interactive LodeRunner Command
+### Sample Interactive WebV Command
 
 ```bash
 
 # after running this command, you should see json output at the command line describing HTTP requests
 
-# the LodeRunner command below sends HTTP requests to the server $ASB_DOMAIN in a continuous loop at the rate of one request per second
+# the WebV command below sends HTTP requests to the server $ASB_DOMAIN in a continuous loop at the rate of one request per second
 
 # command line arguments:
 #   --sleep 1000: 1000ms between HTTP requests (one request per second)
@@ -64,5 +64,5 @@ docker run ghcr.io/retaildevcrews/ngsa-lr:beta --help
 
 # to terminate this test after a set amount of time you can set the --duration argument (time in seconds). Otherwise, use CTRL-C to stop it.
 
-docker run ghcr.io/retaildevcrews/ngsa-lr:beta --sleep 1000 --run-loop --server $ASB_DOMAIN --files memory-benchmark.json
+docker run ghcr.io/retaildevcrews/webvalidate:beta --sleep 1000 --run-loop --server $ASB_DOMAIN --files memory-benchmark.json
 ```
