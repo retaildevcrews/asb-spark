@@ -10,8 +10,6 @@ The Loderunner application needs to be deployed on our AKS cluster. Create a Kub
 
 container:
     ghcr.io/retaildevcrews/ngsa-lr:beta
-name:
-    l8r-load-1
 namespace:
     ngsa
 args:
@@ -29,7 +27,7 @@ After have applied your yaml file you can check your loderunner pod logs validat
 
 ### Bonus
 
-Modify the input arguments to have Loderunner (lr8) generate approximately 50 req/sec.
+Modify the input arguments to have Loderunner generate approximately 50 req/sec.
 
 ## Resources
 - [K8 Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
@@ -40,8 +38,6 @@ Modify the input arguments to have Loderunner (lr8) generate approximately 50 re
 ## Hints
 
 
-### Loderunner
-
 #### Running Loderunner from command line
 
 ```bash
@@ -51,11 +47,10 @@ docker pull ghcr.io/retaildevcrews/ngsa-lr:beta
 # run loderunner with --help option; this should output command line options shown below
 docker run ghcr.io/retaildevcrews/ngsa-lr:beta --help
 ```
-![Loderunner Parameters](./images/../image/LodeRunnerParameters.PNG)
 
 #### Sample Interactive Loderunner Command
 
 ```bash
 # after running this command, you should see json output at the command line describing HTTP requests
-docker run ghcr.io/retaildevcrews/ngsa-lr:beta -l "1000" -r -s https://worka.aks-sb.com -f memory-benchmark.json
+docker run ghcr.io/retaildevcrews/ngsa-lr:beta -l "1000" -r -s $ASB_DOMAIN -f memory-benchmark.json
 ```
