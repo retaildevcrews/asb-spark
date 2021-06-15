@@ -361,7 +361,7 @@ curl https://${ASB_DOMAIN}/memory/version
 
 ### Challenge 3
 
-- [Add ghcr.io as a container registry](./challenges/github-container-registry/README.md)
+- [Deploy ACR image](./challenges/acr/README.md)
 
 ### Challenge 4
 
