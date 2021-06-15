@@ -2,7 +2,7 @@
 
 ## Background
 
-To create a load test for our NGSA application, we need to run our end-to-end test tool (LodeRunner) which generates https requests and sends them to our NGSA application. More about LodeRunner can be found [here](#loderunner).
+LodeRunner is our end-to-end test tool that generates https requests and sends them to our NGSA application. These https requests can be used to enable load tests and to verify that the NGSA application is handling https requests correctly. Sample commands showing how to run LodeRunner interactively from the command line can be found [here](#hints).
 
 The LodeRunner application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy LodeRunner. The inputs needed to deploy LodeRunner on our AKS cluster are shown below. Using these inputs, LodeRunner will generate approximately 1 request per second when deployed.
 
