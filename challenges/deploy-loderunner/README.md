@@ -2,7 +2,7 @@
 
 ## Background
 
-To create a load test for our NGSA application, we need to run our end-to-end test tool (LodeRunner) which generates https requests and sends them to our NGSA application. More about LodeRunner can be found [here](#loderunner).
+LodeRunner is our end-to-end test tool that generates https requests and sends them to our NGSA application. These https requests can be used to enable load tests and to verify that the NGSA application is handling https requests correctly. Sample commands showing how to run LodeRunner interactively from the command line can be found [here](#hints).
 
 The LodeRunner application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy LodeRunner. The inputs needed to deploy LodeRunner on our AKS cluster are shown below. Using these inputs, LodeRunner will generate approximately 1 request per second when deployed.
 
@@ -23,7 +23,7 @@ This challenge depends on [Pulling from GitHub Container Registry](../github-con
 
 ### Validate
 
-After have applied your yaml file you can check your LodeRunner pod logs validate that HTTP requests are being sent.
+After you have applied your yaml file you can check your LodeRunner pod logs to validate that HTTP requests are being sent.
 
 ### Bonus
 
@@ -56,5 +56,15 @@ Pressing Ctrl + C will stop command.
 
 ```bash
 # after running this command, you should see json output at the command line describing HTTP requests
+# the loderunner command below sends HTTP requests to the server $ASB_DOMAIN in a continuous loop at the rate of one request per second
+
+# command line arguments:
+#   --sleep 1000: 1000ms between HTTP requests (one request per second)
+#   --run-loop: run in a continuous loop
+#   --server $ASB_DOMAIN: test the server $ASB_DOMAIN
+#   --files memory-benchmark.json: test file(s) containing HTTP requests and expected response
+
+# to terminate this test after a set amount of time you can set the --duration argument (time in seconds). Otherwise, use CTRL-C to stop it.
+
 docker run ghcr.io/retaildevcrews/ngsa-lr:beta --sleep 1000 --run-loop --server $ASB_DOMAIN --files memory-benchmark.json
 ```
