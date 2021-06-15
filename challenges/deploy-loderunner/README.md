@@ -31,10 +31,10 @@ Modify the input arguments to have LodeRunner generate approximately 50 req/sec.
 
 ## Resources
 
-- [K8 Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
+- [Kubernetes Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
 - [Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 - [Static-pod](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
-- [K8 Cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#creating-objects)
+- [Kubernetes Cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#creating-objects)
 
 ## Hints
 
