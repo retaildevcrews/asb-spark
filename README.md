@@ -361,12 +361,11 @@ curl https://${ASB_DOMAIN}/memory/version
 
 ### Challenge 3
 
-- [Add ghcr.io as a container registry](./challenges/github-container-registry/README.md)
+- Deploy Azure Container Registry [image](./challenges/azure-container-registry/README.md)
 
 ### Challenge 4
 
-- TODO - add link
-- Deploy `LodeRunner` from `ghcr.io/retaildevcrews/loderunner:latest`
+- Generate constant load on `ngsa-memory` into Azure Log Analytics
 
 ### Other ideas for exploring
 
