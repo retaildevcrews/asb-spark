@@ -361,7 +361,7 @@ curl https://${ASB_DOMAIN}/memory/version
 
 ### Challenge 3
 
-- [Deploy ACR image](./challenges/acr/README.md)
+- [Deploy ACR image](./challenges/azure-container-registry/README.md)
 
 ### Challenge 4
 
