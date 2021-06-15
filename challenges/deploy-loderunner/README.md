@@ -23,7 +23,7 @@ This challenge depends on [Pulling from GitHub Container Registry](../github-con
 
 ### Validate
 
-After have applied your yaml file you can check your LodeRunner pod logs validate that HTTP requests are being sent.
+After you have applied your yaml file you can check your LodeRunner pod logs to validate that HTTP requests are being sent.
 
 ### Bonus
 
@@ -52,5 +52,15 @@ docker run ghcr.io/retaildevcrews/ngsa-lr:beta --help
 
 ```bash
 # after running this command, you should see json output at the command line describing HTTP requests
+# the loderunner command below sends HTTP requests to the server $ASB_DOMAIN in a continuous loop at the rate of one request per second
+
+# command line arguments:
+#   --sleep 1000: 1000ms between HTTP requests (one request per second)
+#   --run-loop: run in a continuous loop
+#   --server $ASB_DOMAIN: test the server $ASB_DOMAIN
+#   --files memory-benchmark.json: test file(s) containing HTTP requests and expected response
+
+# to terminate this test after a set amount of time you can set the --duration argument (time in seconds). Otherwise, use CTRL-C to stop it.
+
 docker run ghcr.io/retaildevcrews/ngsa-lr:beta --sleep 1000 --run-loop --server $ASB_DOMAIN --files memory-benchmark.json
 ```
