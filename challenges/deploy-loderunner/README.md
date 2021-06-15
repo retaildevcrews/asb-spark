@@ -50,6 +50,10 @@ docker run ghcr.io/retaildevcrews/ngsa-lr:beta --help
 
 ### Sample Interactive LodeRunner Command
 
+The following command will coninuously run tests located in memory-benchmark.json every 1000 ms.
+
+Pressing Ctrl + C will stop command.
+
 ```bash
 # after running this command, you should see json output at the command line describing HTTP requests
 docker run ghcr.io/retaildevcrews/ngsa-lr:beta --sleep 1000 --run-loop --server $ASB_DOMAIN --files memory-benchmark.json
