@@ -11,7 +11,7 @@ The WebV application needs to be deployed on our AKS cluster. Create a Kubernete
 namespace:
     ngsa
 args:
-    --sleep 1000 --run-loop --server https://< your subdomain name >.aks-sb.com --files memory-benchmark.json
+    --sleep 1000 --run-loop --server https://${ASB_TEAM_NAME}.aks-sb.com --files memory-benchmark.json
 
 ```
 
@@ -21,7 +21,7 @@ This challenge depends on [Deploying from Azure Container Registry](../azure-con
 
 ### Validate
 
-After you have applied your yaml file you can check your WebV pod logs to validate that web requests are being sent and the correct status codes are being returned.
+After you have deployed the Web Validate tool, you can check WebV pod logs to validate that web requests are being sent and the correct status codes are being returned.
 
 ### Bonus Challenge 1
 
@@ -39,7 +39,6 @@ There are three possible ways.
 
 - [Kubernetes Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
 - [Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
-- [Static-pod](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
 - [Kubernetes Cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#creating-objects)
 
 ## Hints
@@ -47,11 +46,13 @@ There are three possible ways.
 ### Running WebV from command line
 
 ```bash
+
 # pull image from GitHub Container Repository 
 docker pull ghcr.io/retaildevcrews/webvalidate:beta
 
 # run WebV with --help option; this should output command line options shown below
 docker run ghcr.io/retaildevcrews/webvalidate:beta --help
+
 ```
 
 ### Sample Interactive WebV Command
@@ -70,5 +71,6 @@ docker run ghcr.io/retaildevcrews/webvalidate:beta --help
 
 # to terminate this test after a set amount of time you can set the --duration argument (time in seconds). Otherwise, use CTRL-C to stop it.
 
-docker run ghcr.io/retaildevcrews/webvalidate:beta --sleep 1000 --run-loop --server "https://${ASB_DOMAIN}" --files memory-benchmark.json
+docker run -it --rm ghcr.io/retaildevcrews/webvalidate:beta --sleep 1000 --run-loop --verbose --duration 30 --log-format Json --server "https://${ASB_DOMAIN}" --files memory-benchmark.json
+
 ```
