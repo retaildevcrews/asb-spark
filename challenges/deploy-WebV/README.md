@@ -1,8 +1,10 @@
-# Deploy WebValidate
+# Deploy Web Validate
 
 ## Background
 
-Web Validate (WebV) is our end-to-end test tool that generates web requests and sends them to our NGSA application. These web requests can be used to enable load tests and to verify that the NGSA application is handling web requests correctly. More information about running WebV interactively from the command line can be found [here](https://github.com/microsoft/webvalidate).
+Web Validate (WebV) is an end-to-end test tool that we will use to generate web requests against our application. These web requests can be validated on a simple returned status code or can be configured to perform a deep validation. Crucially, the logs and metrics of the testing can be stored in Graphana or Azure Logs to ensure application functionality and performance through integration and load testing. Although not part of this challenge, dashboards and monitors are created from these logs and metrics to gain a real time view of the application along with its historical baseline.
+
+More information about running WebV interactively from the command line can be found [here](https://github.com/microsoft/webvalidate).
 
 The WebV application needs to be deployed on our AKS cluster. Create a Kubernetes manifest file (yaml) to define and create the appropriate resource(s) needed to deploy WebV. The inputs needed to deploy WebV on our AKS cluster are shown below. Using these inputs, WebV will generate approximately 1 request per second when deployed.
 
