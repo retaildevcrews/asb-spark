@@ -8,8 +8,6 @@ The WebV application needs to be deployed on our AKS cluster. Create a Kubernete
 
 ```yaml
 
-container:
-    ghcr.io/retaildevcrews/ngsa-webv:beta
 namespace:
     ngsa
 args:
@@ -19,7 +17,7 @@ args:
 
 ### Prerequisite
 
-This challenge depends on [Pulling from GitHub Container Registry](../github-container-registry/README.md) to enable the cluster to pull container images from `ghcr.io`
+This challenge depends on [Deploying from Azure Container Registry](../azure-container-registry/README.md)
 
 ### Validate
 
