@@ -1,13 +1,6 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: cluster-baseline-settings
-
----
-
-kind: Namespace
-apiVersion: v1
-metadata:
   labels:
     name: ingress
   name: ingress
