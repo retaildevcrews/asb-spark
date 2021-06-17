@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/universal:1
 RUN export DEBIAN_FRONTEND=noninteractive && \
     sudo apt-get update && \
     sudo apt-get -y install --no-install-recommends apt-utils dialog apt-transport-https ca-certificates && \
-    sudo apt-get -y install --no-install-recommends curl git wget nano bash-completion software-properties-common make jq httpie
+    sudo apt-get -y install --no-install-recommends curl git wget nano bash-completion software-properties-common make jq httpie iputils-ping
 
 # install k9s, github cli, jp and fluxctl
 RUN sudo curl -Lo ./k9s.tar.gz https://github.com/derailed/k9s/releases/download/v0.24.2/k9s_Linux_x86_64.tar.gz && \
