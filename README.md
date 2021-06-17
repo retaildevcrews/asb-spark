@@ -365,7 +365,7 @@ curl https://${ASB_DOMAIN}/memory/version
 
 ### Challenge 4
 
-- Generate constant load on `ngsa-memory` into Azure Log Analytics
+- [Deploy Web Validate](./challenges/deploy-WebV/README.md)
 
 ### Other ideas for exploring
 
