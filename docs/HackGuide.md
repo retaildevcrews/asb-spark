@@ -6,6 +6,7 @@
 
 - Working knowledge of Docker, Kubernetes and AKS
 - GitHub ID with 2FA enabled
+- AIRS subscription with owner privileges
 
 ### Process
 
