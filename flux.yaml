@@ -106,7 +106,7 @@ spec:
           initialDelaySeconds: 5
           timeoutSeconds: 5
         args:
-        - --git-url=
+        - --git-url=https://github.com/retaildevcrews/asb-spark
         - --git-branch=manandak
         - --git-path=gitops
         - --git-readonly
