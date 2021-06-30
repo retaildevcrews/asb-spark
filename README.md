@@ -26,10 +26,9 @@
 az login
 
 # verify the correct subscription
-az account show
-
-# install kubectl and kubelogin
-sudo az aks install-cli
+# you must be the owner of the subscription
+# tenant ID should be 72f988bf-86f1-41af-91ab-2d7cd011db47 
+az account show -o table
 
 # set your security group name
 export ASB_CLUSTER_ADMIN_GROUP=asb-hack
@@ -99,6 +98,15 @@ export ASB_GEO_LOCATION=japanwest
 
 export ASB_LOCATION=southeastasia
 export ASB_GEO_LOCATION=eastasia
+
+```
+
+### Save your work in-progress
+
+```bash
+
+# install kubectl and kubelogin
+sudo az aks install-cli
 
 # run the saveenv.sh script at any time to save ASB_* variables to ASB_TEAM_NAME.asb.env
 ./saveenv.sh -y
