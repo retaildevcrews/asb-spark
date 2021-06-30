@@ -151,7 +151,7 @@
                             "destinationPortRange": "443",
                             "destinationAddressPrefix": "VirtualNetwork",
                             "access": "Allow",
-                            "priority": 100,
+                            "priority": 101,
                             "direction": "Inbound"
                         }
                     },
