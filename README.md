@@ -22,6 +22,8 @@
 
 ```bash
 
+🛑 Run these commands one at a time
+
 # login to your Azure subscription
 az login
 
@@ -54,8 +56,14 @@ az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o 
 
 ```bash
 
+🛑 Set your Team Name per the above rules
+
 #### set the team name
 export ASB_TEAM_NAME=[starts with a-z, [a-z,0-9], max length 8]
+
+```
+
+```bash
 
 # make sure the resource group doesn't exist
 az group list -o table | grep $ASB_TEAM_NAME
@@ -86,6 +94,8 @@ git push -u origin $ASB_TEAM_NAME
 
 ```bash
 
+🛑 Only choose one pair from the below block
+
 ### choose the closest pair - not all regions support ASB
 export ASB_LOCATION=eastus2
 export ASB_GEO_LOCATION=centralus
@@ -107,6 +117,9 @@ export ASB_GEO_LOCATION=japanwest
 
 export ASB_LOCATION=southeastasia
 export ASB_GEO_LOCATION=eastasia
+
+export ASB_LOCATION=eastus2
+export ASB_GEO_LOCATION=centralus
 
 ```
 
@@ -335,7 +348,7 @@ kubectl get pods -A
 # setup flux
 kubectl apply -f flux.yaml
 
-# check the pods until everything is running
+# 🛑 check the pods until everything is running
 kubectl get pods -n flux-cd -l app.kubernetes.io/name=flux
 
 # check flux logs
