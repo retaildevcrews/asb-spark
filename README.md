@@ -44,6 +44,12 @@ az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o 
 
 - Team Name is very particular and won't fail for about an hour ...
   - we recommend youralias1 (not first.last)
+    - if your alias > 7 chars, you need to trim it to total length of 8
+  - must be lowercase
+  - must start with a-z
+  - must only be a-z or 0-9
+  - max length is 8
+  - min length is 3
 
 ```bash
 
