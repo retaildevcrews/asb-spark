@@ -40,8 +40,10 @@ az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o 
 
 ### Set Team Name
 
-> Team Name is very particular and won't fail for about an hour ...
-> we recommend youralias1 (not first.last)
+> Team Name is used in resource naming to provide unique names for the OpenHack
+
+- Team Name is very particular and won't fail for about an hour ...
+  - we recommend youralias1 (not first.last)
 
 ```bash
 
