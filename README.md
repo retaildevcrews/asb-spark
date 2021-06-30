@@ -26,6 +26,7 @@
 az login
 
 # verify the correct subscription
+# use az account set -s <sub> to change the sub if required
 # you must be the owner of the subscription
 # tenant ID should be 72f988bf-86f1-41af-91ab-2d7cd011db47 
 az account show -o table
