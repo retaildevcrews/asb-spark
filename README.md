@@ -22,14 +22,16 @@
 
 ```bash
 
+🛑 Run these commands one at a time
+
 # login to your Azure subscription
 az login
 
 # verify the correct subscription
-az account show
-
-# install kubectl and kubelogin
-sudo az aks install-cli
+# use az account set -s <sub> to change the sub if required
+# you must be the owner of the subscription
+# tenant ID should be 72f988bf-86f1-41af-91ab-2d7cd011db47 
+az account show -o table
 
 # set your security group name
 export ASB_CLUSTER_ADMIN_GROUP=asb-hack
@@ -41,13 +43,27 @@ az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o 
 
 ### Set Team Name
 
-> Team Name is very particular and won't fail for about an hour ...
-> we recommend youralias1 (not first.last)
+> Team Name is used in resource naming to provide unique names for the OpenHack
+
+- Team Name is very particular and won't fail for about an hour ...
+  - we recommend youralias1 (not first.last)
+    - if your alias > 7 chars, you need to trim it to total length of 8
+  - must be lowercase
+  - must start with a-z
+  - must only be a-z or 0-9
+  - max length is 8
+  - min length is 3
 
 ```bash
 
+🛑 Set your Team Name per the above rules
+
 #### set the team name
 export ASB_TEAM_NAME=[starts with a-z, [a-z,0-9], max length 8]
+
+```
+
+```bash
 
 # make sure the resource group doesn't exist
 az group list -o table | grep $ASB_TEAM_NAME
@@ -78,6 +94,8 @@ git push -u origin $ASB_TEAM_NAME
 
 ```bash
 
+🛑 Only choose one pair from the below block
+
 ### choose the closest pair - not all regions support ASB
 export ASB_LOCATION=eastus2
 export ASB_GEO_LOCATION=centralus
@@ -99,6 +117,18 @@ export ASB_GEO_LOCATION=japanwest
 
 export ASB_LOCATION=southeastasia
 export ASB_GEO_LOCATION=eastasia
+
+export ASB_LOCATION=eastus2
+export ASB_GEO_LOCATION=centralus
+
+```
+
+### Save your work in-progress
+
+```bash
+
+# install kubectl and kubelogin
+sudo az aks install-cli
 
 # run the saveenv.sh script at any time to save ASB_* variables to ASB_TEAM_NAME.asb.env
 ./saveenv.sh -y
@@ -318,7 +348,7 @@ kubectl get pods -A
 # setup flux
 kubectl apply -f flux.yaml
 
-# check the pods until everything is running
+# 🛑 check the pods until everything is running
 kubectl get pods -n flux-cd -l app.kubernetes.io/name=flux
 
 # check flux logs
