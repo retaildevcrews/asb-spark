@@ -1,0 +1,45 @@
+name: Build Codespace Container
+
+on:
+  schedule:
+    # Run on Sunday at 6:00 AM UTC
+    - cron: "0 6 * * 0"
+
+  push:
+    branches:
+      - main
+
+    paths:
+    - '.devcontainer/Dockerfile'
+    - '.github/workflows/docker.yaml'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_REPO: ghcr.io/retaildevcrews/asb
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Login to Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ secrets.GHCR_ID }}
+        password: ${{ secrets.GHCR_PAT }}
+
+    - name: Docker Build
+      run: |
+        cd .devcontainer
+        docker build . -t image
+        
+    - name: Docker Tag and Push
+      run: |
+        # tag the repo with :beta
+        docker tag image $DOCKER_REPO:latest
+
+        # Push to the repo
+        docker push $DOCKER_REPO
