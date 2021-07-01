@@ -1,5 +1,7 @@
 FROM mcr.microsoft.com/vscode/devcontainers/universal:1
 
+# We intentionally use multiple layers small so that startup is faster with parallel pull
+
 # install packages
 RUN export DEBIAN_FRONTEND=noninteractive && \
     sudo apt-get update
@@ -30,6 +32,20 @@ RUN kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/nul
     sudo chmod +x /usr/local/bin/fluxctl && \
     sudo apt-get install -f
 
+# use multiple layers for updates
+RUN sudo apt-get install -y azure-cli
+RUN sudo apt-get install -y python3
+RUN sudo apt-get upgrade -y
+
+# install oh-my-bash
+RUN cd $HOME && \
+    OSH=$HOME/.oh-my-bash && \
+    rm -rf $OSH && \
+    git --depth=1 clone https://github.com/ohmybash/oh-my-bash $OSH && \
+    cp $OSH/templates/bashrc.osh-template $HOME/.bashrc && \
+    sed "/^export OSH=/ c\\export OSH=$OSH" $HOME/.bashrc > $HOME/.bashrc-ombtemp && \
+    mv -f $HOME/.bashrc-ombtemp $HOME/.bashrc
+
 # create directories, update .bashrc, config git
 RUN mkdir -p $HOME/.ssh && \
     mkdir -p $HOME/.kube && \
@@ -38,12 +54,6 @@ RUN mkdir -p $HOME/.ssh && \
     mkdir -p $HOME/.k9s && \
     mkdir -p $HOME/go/src && \
     mkdir -p $HOME/.dotnet/tools && \
-    echo >> $HOME/.bashrc && \
-    echo "source /etc/profile.d/bash_completion.sh" >> $HOME/.bashrc && \
-    echo >> $HOME/.bashrc && \
-    echo "alias ls='ls --color=auto'" >> $HOME/.bashrc && \
-    echo "alias ll='ls -alF'" >> $HOME/.bashrc && \
-    echo "alias la='ls -alF'" >> $HOME/.bashrc && \
     echo >> $HOME/.bashrc && \
     echo 'export PATH=$PATH:$HOME/.local/bin:$HOME/.dotnet/tools' >> $HOME/.bashrc && \
     echo "alias k='kubectl'" >> $HOME/.bashrc && \
@@ -69,7 +79,3 @@ RUN mkdir -p $HOME/.ssh && \
     git config --global pull.rebase false && \
     git config --global init.defaultbranch main && \
     git config --global core.pager more
-
-RUN sudo apt-get install -y azure-cli
-RUN sudo apt-get install -y python3
-RUN sudo apt-get upgrade -y
