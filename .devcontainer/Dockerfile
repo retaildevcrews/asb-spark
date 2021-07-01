@@ -41,7 +41,7 @@ RUN sudo apt-get upgrade -y
 RUN cd $HOME && \
     OSH=$HOME/.oh-my-bash && \
     rm -rf $OSH && \
-    git --depth=1 clone https://github.com/ohmybash/oh-my-bash $OSH && \
+    git clone --depth=1 https://github.com/ohmybash/oh-my-bash $OSH && \
     cp $OSH/templates/bashrc.osh-template $HOME/.bashrc && \
     sed "/^export OSH=/ c\\export OSH=$OSH" $HOME/.bashrc > $HOME/.bashrc-ombtemp && \
     mv -f $HOME/.bashrc-ombtemp $HOME/.bashrc
