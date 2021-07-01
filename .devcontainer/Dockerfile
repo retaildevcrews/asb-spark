@@ -69,3 +69,5 @@ RUN mkdir -p $HOME/.ssh && \
     git config --global pull.rebase false && \
     git config --global init.defaultbranch main && \
     git config --global core.pager more
+
+RUN sudo apt-get upgrade -y
