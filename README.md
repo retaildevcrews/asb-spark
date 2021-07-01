@@ -180,7 +180,7 @@ echo $ASB_CLUSTER_ADMIN_ID
 ```bash
 
 # set GitOps repo
-export ASB_GIT_REPO=$(git remote -v | cut -f 2 | cut -f 1 -d " " | head -n 1)
+export ASB_GIT_REPO=$(git remote get-url origin)
 export ASB_GIT_BRANCH=$ASB_TEAM_NAME
 export ASB_GIT_PATH=gitops
 
