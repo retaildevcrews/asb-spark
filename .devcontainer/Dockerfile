@@ -31,8 +31,14 @@ RUN mkdir -p $HOME/.ssh && \
     mkdir -p $HOME/.k9s && \
     mkdir -p $HOME/go/src && \
     mkdir -p $HOME/.dotnet/tools && \
-    echo "" >> $HOME/.bashrc && \
-    echo "export PATH=$PATH:$HOME/.local/bin:$HOME/.dotnet/tools" >> $HOME/.bashrc && \
+    echo >> $HOME/.bashrc && \
+    echo "source /etc/profile.d/bash_completion.sh" >> $HOME/.bashrc && \
+    echo >> $HOME/.bashrc && \
+    echo "alias l2='ls --color=auto'" >> $HOME/.bashrc && \
+    echo "alias ll='ls -alF'" >> $HOME/.bashrc && \
+    echo "alias la='ls -alF'" >> $HOME/.bashrc && \
+    echo >> $HOME/.bashrc && \
+    echo 'export PATH=$PATH:$HOME/.local/bin:$HOME/.dotnet/tools' >> $HOME/.bashrc && \
     echo "alias k='kubectl'" >> $HOME/.bashrc && \
     echo "alias kga='kubectl get all'" >> $HOME/.bashrc && \
     echo "alias kgaa='kubectl get all --all-namespaces'" >> $HOME/.bashrc && \
@@ -43,10 +49,13 @@ RUN mkdir -p $HOME/.ssh && \
     echo "alias kcgc='kubectl config get-contexts'" >> $HOME/.bashrc && \
     echo "alias kj='kubectl exec -it jumpbox -- bash -l'" >> $HOME/.bashrc && \
     echo "alias kje='kubectl exec -it jumpbox -- '" >> $HOME/.bashrc && \
+    echo >> $HOME/.bashrc && \
+    echo "alias ipconfig='ip -4 a show eth0 | grep inet | sed \"s/inet//g\" | sed \"s/ //g\" | cut -d / -f 1'" >> $HOME/.bashrc && \
+    echo >> $HOME/.bashrc && \
     echo "export FLUX_FORWARD_NAMESPACE=flux-cd" >> $HOME/.bashrc && \
     echo "export GO111MODULE=on" >> $HOME/.bashrc && \
-    echo "alias ipconfig='ip -4 a show eth0 | grep inet | sed \"s/inet//g\" | sed \"s/ //g\" | cut -d / -f 1'" >> $HOME/.bashrc && \
     echo 'export PIP=$(ipconfig | tail -n 1)' >> $HOME/.bashrc && \
+    echo >> $HOME/.bashrc && \
     echo 'complete -F __start_kubectl k' >> $HOME/.bashrc && \
     dotnet tool install -g webvalidate && \
     git config --global core.whitespace blank-at-eol,blank-at-eof,space-before-tab && \
