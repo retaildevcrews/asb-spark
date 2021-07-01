@@ -70,4 +70,6 @@ RUN mkdir -p $HOME/.ssh && \
     git config --global init.defaultbranch main && \
     git config --global core.pager more
 
+RUN sudo apt-get install -y azure-cli
+RUN sudo apt-get install -y python3
 RUN sudo apt-get upgrade -y
