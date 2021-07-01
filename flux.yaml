@@ -60,6 +60,8 @@ spec:
       labels:
         app.kubernetes.io/name: flux
         app: flux
+        owner: asb-hack
+        department: cse
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -136,6 +138,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: memcached
+        owner: agmangal
+        department: csu
     spec:
       nodeSelector:
         kubernetes.io/os: linux

@@ -208,6 +208,8 @@ spec:
         app.kubernetes.io/name: traefik-ingress-ilb
         app.kubernetes.io/instance: traefik-ingress-ilb
         aadpodidbinding: podmi-ingress-controller
+        owner: asb-hack
+        department: cse
     spec:
       hostNetwork: false
       serviceAccountName: traefik-ingress-controller
