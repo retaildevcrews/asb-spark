@@ -1,6 +1,7 @@
 {
-	"name": "ASB-Hack",
-	"build": { "dockerfile": "Dockerfile" },
+	"name": "ASB-Spark",
+	"image": "ghcr.io/retaildevcrews/asb:latest",
+	//"build": { "dockerfile": "Dockerfile" },
 	"runArgs": [ "--init", "--privileged" ],
 	"overrideCommand": false,
 
