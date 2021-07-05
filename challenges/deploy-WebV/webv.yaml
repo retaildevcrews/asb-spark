@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-validate
+  namespace: ngsa
+  labels:
+    app.kubernetes.io/name: web-validate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-validate
+  template:
+    metadata:
+      labels:
+        app: web-validate
+        version: beta
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+    spec:
+      containers:
+        - name: app
+          image: acraks52g7upr2g2mre.azurecr.io/webvalidate:beta
+          imagePullPolicy: Always
+          args: ["--sleep","1000","--run-loop","--verbose","--log-format","Json","--server","https://agmanga1.aks-sb.com","--files","memory-benchmark.json"]
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+      nodeSelector:
+        agentpool: npuser01
+
