@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webvalidate
+  namespace: ngsa
+  labels:
+    app.kubernetes.io/name: webvalidate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webvalidate
+  template:
+    metadata:
+      labels:
+        app: webvalidate
+        version: beta-0514-1915
+        deploy: 21-05-14-19-15-24
+    spec:
+      containers:
+        - name: app
+          image: acraks5ul32s45zudsc.azurecr.io/retaildevcrews/webvalidate:beta
+          imagePullPolicy: Always
+          args: ["--sleep", "1000", "--run-loop", "--verbose", "--log-format", "Json", "--server", "https://ythuang.aks-sb.com", "--files", "memory-benchmark.json"]
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+
+      nodeSelector:
+        agentpool: npuser01
