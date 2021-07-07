@@ -208,6 +208,12 @@ export ASB_TENANT_ID=$(az account show --query tenantId -o tsv)
 
 ```
 
+### Azure Policies
+
+If you have additional Azure Policies on your subscription, it could cause deployment to fail. If that happens, check your policies and disable anything that is blocking.
+
+Ask the coaches for help debugging.
+
 #### Create Resource Groups
 
 ```bash
