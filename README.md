@@ -334,7 +334,16 @@ kubectl logs -n flux-cd -l app.kubernetes.io/name=flux
 
 # wait for traefik pods to start
 ### this can take 2-3 minutes
-kubectl get pods -n ingress
+watch kubectl get pods -n ingress
+
+# Once the pods are up then press ctrl+c and continue.  
+# Ready is indicated by READY showing 1/1 for both pods as follows:
+# 
+# Every 2.0s: kubectl get pods -n ingress                                                                                                                                  codespaces_a6ac35: Wed Jun 30 15:34:33 2021
+
+# NAME                                          READY   # # STATUS    RESTARTS   AGE
+# traefik-ingress-controller-77bd7444fb-22rzg   1/1     # # Running   0          5m14s
+# traefik-ingress-controller-77bd7444fb-bt4gd   1/1     # Running   0          5m14s
 
 ## Verify with curl
 ### this can take 1-2 minutes
