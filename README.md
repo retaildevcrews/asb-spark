@@ -14,6 +14,9 @@
 
 ### Create Codespace
 
+> The OpenHack requires Codespaces and bash
+> If you have dotfiles that default to zsh, make sure to use bash as your terminal
+
 - The `AKS Secure Baseline` repo for the OpenHack is at [github/retaildevcrews/asb-spark](https://github.com/retaildevcrews/asb-spark)
 - Open this repo in your web browser
 - Create a new `Codespace` in this repo
@@ -33,10 +36,17 @@ az login
 # tenant ID should be 72f988bf-86f1-41af-91ab-2d7cd011db47 
 az account show -o table
 
+```
+
+### Verify the security group
+
+```bash
+
 # set your security group name
 export ASB_CLUSTER_ADMIN_GROUP=asb-hack
 
 # verify you are a member of the security group
+# if you are not a member, please request via Teams chat
 az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o table
 
 ```
@@ -47,7 +57,7 @@ az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o 
 
 - Team Name is very particular and won't fail for about an hour ...
   - we recommend youralias1 (not first.last)
-    - if your alias > 7 chars, you need to trim it to total length of 8
+    - if your alias > 7 chars, you need to trim it to total length of 8 or less
   - must be lowercase
   - must start with a-z
   - must only be a-z or 0-9
@@ -177,7 +187,7 @@ echo $ASB_CLUSTER_ADMIN_ID
 ```bash
 
 # set GitOps repo
-export ASB_GIT_REPO=$(git remote -v | cut -f 2 | cut -f 1 -d " " | head -n 1)
+export ASB_GIT_REPO=$(git remote get-url origin)
 export ASB_GIT_BRANCH=$ASB_TEAM_NAME
 export ASB_GIT_PATH=gitops
 
@@ -197,6 +207,12 @@ export ASB_TENANT_ID=$(az account show --query tenantId -o tsv)
 ./saveenv.sh -y
 
 ```
+
+### Azure Policies
+
+If you have additional Azure Policies on your subscription, it could cause deployment to fail. If that happens, check your policies and disable anything that is blocking.
+
+Ask the coaches for help debugging.
 
 #### Create Resource Groups
 
