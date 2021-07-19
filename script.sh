@@ -1,34 +1,4 @@
 
-# get AAD cluster admin group
-export ASB_CLUSTER_ADMIN_ID=$(az ad group show -g $ASB_CLUSTER_ADMIN_GROUP --query objectId -o tsv)
-
-# verify AAD admin group
-echo $ASB_CLUSTER_ADMIN_GROUP
-echo $ASB_CLUSTER_ADMIN_ID
-
-
-# set GitOps repo
-# (earlier) export ASB_GIT_REPO=$(git remote -v | cut -f 2 | cut -f 1 -d " " | head -n 1)
-export ASB_GIT_REPO=$(git remote get-url origin)
-export ASB_GIT_BRANCH=$ASB_TEAM_NAME
-export ASB_GIT_PATH=gitops
-
-# set default domain name
-export ASB_DNS_ZONE=aks-sb.com
-export ASB_DOMAIN=${ASB_TEAM_NAME}.${ASB_DNS_ZONE}
-
-# resource group names
-export ASB_RG_CORE=rg-${ASB_TEAM_NAME}-core
-export ASB_RG_HUB=rg-${ASB_TEAM_NAME}-networking-hub
-export ASB_RG_SPOKE=rg-${ASB_TEAM_NAME}-networking-spoke
-
-# export AAD env vars
-export ASB_TENANT_ID=$(az account show --query tenantId -o tsv)
-
-# save env vars
-./saveenv.sh -y
-
-
 # create the resource groups
 az group create -n $ASB_RG_HUB -l $ASB_LOCATION
 az group create -n $ASB_RG_SPOKE -l $ASB_LOCATION
