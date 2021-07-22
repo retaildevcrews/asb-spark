@@ -22,9 +22,3 @@ assignees: ''
 ## Additional Context
 
 -
-
-## Next Steps
-
-- [ ] Team consensus to proceed
-- [ ] Complete Design Review Template (if applicable)
-- [ ] Schedule Design Session

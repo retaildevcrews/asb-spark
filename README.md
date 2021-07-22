@@ -12,16 +12,32 @@
 
 ## Deploying ASB
 
+> Make sure you accepted your GitHub invitation to the org BEFORE creating your Codespace!
+
 ### Create Codespace
 
 > The OpenHack requires Codespaces and bash
 > If you have dotfiles that default to zsh, make sure to use bash as your terminal
 
-- The `AKS Secure Baseline` repo for the OpenHack is at [github/retaildevcrews/asb-spark](https://github.com/retaildevcrews/asb-spark)
+- The `AKS Secure Baseline` repo for the OpenHack is at [github//asb-spark/openhack](https://github.com/asb-spark/openhack)
 - Open this repo in your web browser
 - Create a new `Codespace` in this repo
   - If the `fork option` appears, you need to request permission to the repo
   - Do not choose fork
+
+🛑 Do not ignore an error as your deploy will fail in about an hour
+
+- the likely problem is you didn't accept your invite to the organization
+- close this Codespace, accept your invite and start over
+
+```bash
+
+# check certs
+if [ -z $APP_GW_CERT ]; then echo "App Gateway cert not set correctly"; fi
+if [ -z $INGRESS_CERT ]; then echo "Ingress cert not set correctly"; fi
+if [ -z $INGRESS_KEY ]; then echo "Ingress key not set correctly"; fi
+
+```
 
 ```bash
 
@@ -46,8 +62,8 @@ az account show -o table
 export ASB_CLUSTER_ADMIN_GROUP=asb-hack
 
 # verify you are a member of the security group
-# if you are not a member, please request via Teams chat
-az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o table
+# if you are not a member, please make sure you filled out the Office Form and IM bartr directly
+az ad group member list -g $ASB_CLUSTER_ADMIN_GROUP  --query [].mailNickname -o table | grep <youralias>
 
 ```
 
