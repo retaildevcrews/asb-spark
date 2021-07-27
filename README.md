@@ -8,7 +8,7 @@
 
 ## Filing Bugs
 
-> Please capture any bugs, issues or ideas on the `GitHub Board`
+> Do not update this repo - any updates should go to the asb-hack repo
 
 ## Deploying ASB
 
